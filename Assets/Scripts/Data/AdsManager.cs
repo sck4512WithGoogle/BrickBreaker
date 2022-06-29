@@ -1,4 +1,6 @@
 
+using System;
+
 namespace MJ.Ads
 {
     public static class AdsManager
@@ -8,6 +10,7 @@ namespace MJ.Ads
 
 
         private static GoogleAdmobController googleAdmobController;
+        private static UnityAdsController unityAdsController;
 
         private static bool isInit = false;
 
@@ -26,23 +29,33 @@ namespace MJ.Ads
             googleAdmobController = new GoogleAdmobController();
             googleAdmobController.Init();
 
+            unityAdsController = new UnityAdsController();
+            unityAdsController.Init();
 
             isInit = true;
         }
 
         public static void ShowBannerAd()
         {
-            googleAdmobController.ShowBanner(null);
+            googleAdmobController.ShowBanner(unityAdsController.ShowBannerAd);
         }
 
-        public static void ShowInterstitialAd()
+        public static void ShowInterstitialAd(Action _OnFailed, Action _OnClosed)
         {
-            googleAdmobController.ShowInterstitialAd(null, null);
+#if UNITY_EDITOR
+            unityAdsController.ShowInterstitialAd(_OnFailed, _OnClosed);
+            return;
+#endif
+            googleAdmobController.ShowInterstitialAd(() => unityAdsController.ShowInterstitialAd(_OnFailed, _OnClosed), _OnClosed);
         }
 
-        public static void ShowRewardedAd()
+        public static void ShowRewardedAd(Action _OnFailed, Action _OnClosed)
         {
-            googleAdmobController.ShowRewardedAd(null, null);
+#if UNITY_EDITOR
+            unityAdsController.ShowRewardedAd(_OnFailed, _OnClosed);
+            return;
+#endif
+            googleAdmobController.ShowRewardedAd(() => unityAdsController.ShowRewardedAd(_OnFailed, _OnClosed), _OnClosed);
         }
     }
 }

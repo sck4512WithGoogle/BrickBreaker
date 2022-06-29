@@ -7,20 +7,30 @@ namespace MJ.Manager
 
     public static class YieldContainer
     {
-        private static Dictionary<float, WaitForSeconds> waitSeconds;
-
+        private static Dictionary<float, WaitForSeconds> waitForSeconds;
+        private static Dictionary<float, WaitForSecondsRealtime> waitForSecondRealTimes;
         static YieldContainer()
         {
-            waitSeconds = new Dictionary<float, WaitForSeconds>();
+            waitForSeconds = new Dictionary<float, WaitForSeconds>();
+            waitForSecondRealTimes = new Dictionary<float, WaitForSecondsRealtime>();
         }
 
         public static WaitForSeconds GetWaitForSeconds(float _WaitTime)
         {
-            if(!waitSeconds.ContainsKey(_WaitTime))
+            if(!waitForSeconds.ContainsKey(_WaitTime))
             {
-                waitSeconds.Add(_WaitTime ,new WaitForSeconds(_WaitTime));
+                waitForSeconds.Add(_WaitTime ,new WaitForSeconds(_WaitTime));
             }
-            return waitSeconds[_WaitTime];
+            return waitForSeconds[_WaitTime];
+        }
+
+        public static WaitForSecondsRealtime GetWaitForSecondsRealtime(float _WaitTime)
+        {
+            if (!waitForSecondRealTimes.ContainsKey(_WaitTime))
+            {
+                waitForSecondRealTimes.Add(_WaitTime, new WaitForSecondsRealtime(_WaitTime));
+            }
+            return waitForSecondRealTimes[_WaitTime];
         }
     }
 }

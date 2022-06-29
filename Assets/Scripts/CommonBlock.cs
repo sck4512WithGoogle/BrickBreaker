@@ -51,6 +51,23 @@ public class CommonBlock : Block
         }
     }
 
+    protected override void Die()
+    {
+        var blockBreakEffect = PoolManager.GetBlockBreakEffect();
+        blockBreakEffect.transform.position = transform.position;
+        blockBreakEffect.SetActive(true);
+
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            numbers[i].SetActive(false);
+        }
+        numbersParent.DetachChildren();
+        numbers = new GameObject[0];
+
+        ScoreManager.AddScore(disableScore);
+        gameObject.SetActive(false);
+    }
+
     private void RenderNumber(int _Number)
     {
         //numberText.text = leftTouchCount.ToString();
@@ -114,27 +131,6 @@ public class CommonBlock : Block
         }
     }
 
-    public void Suicide()
-    {
-        StartCoroutine(SuicideRoutine());
-        IEnumerator SuicideRoutine()
-        {
-            var myTransform = transform;
-            var curPos = myTransform.position;
-            float shakeTime = 0.3f;
-            while (shakeTime > 0f)
-            {
-                shakeTime -= Time.deltaTime;
-                myTransform.position = curPos + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f), 0f);
-
-                var color = spriteRenderer.color;
-                color.a -= Time.deltaTime * 3.3f;
-                spriteRenderer.color = color;
-                yield return null;
-            }
-            gameObject.SetActive(false);
-        }
-    }
 
     private void OnCollisionEnter2D(Collision2D _Other)
     {
@@ -154,19 +150,7 @@ public class CommonBlock : Block
             }
             else
             {
-                var blockBreakEffect = PoolManager.GetBlockBreakEffect();
-                blockBreakEffect.transform.position = transform.position;
-                blockBreakEffect.SetActive(true);
-
-                for (int i = 0; i < numbers.Length; i++)
-                {
-                    numbers[i].SetActive(false);
-                }
-                numbersParent.DetachChildren();
-                numbers = new GameObject[0];
-
-                ScoreManager.AddScore(disableScore);
-                gameObject.SetActive(false);
+                Die();
             }
         }
     }    

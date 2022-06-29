@@ -74,8 +74,8 @@ namespace MJ.Ads
             MobileAds.Initialize(HandleInitCompleteAction);
 
 
-            RequestInterstitialAD();
-            RequestRewardedAD();
+            //RequestInterstitialAD();
+            //RequestRewardedAD();
         }
 
         private void HandleInitCompleteAction(InitializationStatus initstatus)
@@ -147,6 +147,7 @@ namespace MJ.Ads
 
                     yield return null;
                 }
+                onBannerLoadFailed?.Invoke();
             }
         }
 
@@ -205,10 +206,13 @@ namespace MJ.Ads
             IEnumerator ShowInterstitialRoutine(Action _OnFailed, Action _OnAdClosed)
             {
                 isClick = true;
-
+                Debug.Log(1);
+                RequestInterstitialAD();
+                Debug.Log(2);
                 onInterstitialFailed = _OnFailed;
+                Debug.Log(3);
                 onInterstitialClosed = _OnAdClosed;
-     
+                Debug.Log(4);
 
                 float timer = 0.5f;
                 while (timer > 0f)
@@ -220,17 +224,25 @@ namespace MJ.Ads
                     //    isClick = false;
                     //    yield break;
                     //}
+                    Debug.Log(5);
                     if (interstitialAd.IsLoaded())
                     {
+                        Debug.Log(6);
                         interstitialAd.Show();
+                        Debug.Log(7);
                         RequestInterstitialAD();
+                        Debug.Log(8);
                         isClick = false;
+                        Debug.Log(9);
                         yield break;
                     }
                     yield return null;
                 }
+                Debug.Log(10);
                 onInterstitialFailed?.Invoke();
+                Debug.Log(11);
                 RequestInterstitialAD();
+                Debug.Log(12);
                 isClick = false;
             }
 
@@ -297,7 +309,7 @@ namespace MJ.Ads
                 return;
             }
 
-
+            RequestRewardedAD();
             CoroutineExecuter.Excute(ShowRewardedRoutine(_OnFailed, _OnAdClosed));
 
             IEnumerator ShowRewardedRoutine(Action _OnFailed, Action _OnAdClosed)
