@@ -1,0 +1,46 @@
+{
+    "name": "MyInput",
+    "maps": [
+        {
+            "name": "KeyInput",
+            "id": "02d675df-c963-49f9-b33f-1da2b1207a0c",
+            "actions": [
+                {
+                    "name": "ESC",
+                    "type": "Button",
+                    "id": "8ce9e1c5-87ce-443a-b33b-aa004a974ed9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "bec09444-97ee-49fa-be11-c7a5d6794cc8",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ESC",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

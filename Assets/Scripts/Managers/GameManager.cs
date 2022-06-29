@@ -19,7 +19,7 @@ public struct BallCountAndDamage
 public sealed  class GameManager : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnTransforms;
-    [SerializeField] private InputController inputController;
+    [SerializeField] private BallShootInputListner ballShootInputListener;
     [SerializeField] private Transform arrowTransform;
     [SerializeField] private Transform ballPreviewTransform;
     [SerializeField] private LineRenderer ballShootLineRenderer;
@@ -68,17 +68,12 @@ public sealed  class GameManager : MonoBehaviour
         commonBlocks = new List<CommonBlock>();
         iceBlocks = new List<IceBlock>();
         moves = new List<Movable>();
-
-        //----------
-#if UNITY_EDITOR
-        OptionManager.Init();
-#endif
     }
 
 
     private void Start()
     {
-        inputController.OnBeginDragAction += _Position =>
+        ballShootInputListener.OnBeginDragAction += _Position =>
         {
             firstClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
             shootDirectionLength = 0f;
@@ -89,7 +84,7 @@ public sealed  class GameManager : MonoBehaviour
             ballPreviewTransform.gameObject.SetActive(OptionManager.IsAiming);
         };
 
-        inputController.OnDragAction += _Position =>
+        ballShootInputListener.OnDragAction += _Position =>
         {
             secondClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
 
@@ -139,7 +134,7 @@ public sealed  class GameManager : MonoBehaviour
         };
         
 
-        inputController.OnEndDragAction += () =>
+        ballShootInputListener.OnEndDragAction += () =>
         {
             ballShootLineRenderer.SetPosition(0, Vector3.zero);
             ballShootLineRenderer.SetPosition(1, Vector3.zero);
@@ -160,11 +155,11 @@ public sealed  class GameManager : MonoBehaviour
                 //쏨
                 StartCoroutine(ShootBalls());
 
-                inputController.SetInputActive(false);
+                ballShootInputListener.SetInputActive(false);
             }
         };
 
-        inputController.SetInputActive(true);
+        ballShootInputListener.SetInputActive(true);
 
         if(dataManager.IsContinuePlay)
         {
@@ -235,7 +230,7 @@ public sealed  class GameManager : MonoBehaviour
                 iceBlock.Suicide();
             }
         }
-        inputController.SetInputActive(true);
+        ballShootInputListener.SetInputActive(true);
     }
 
     public void SetTotalBallPos(Vector3 _Pos)
@@ -344,7 +339,7 @@ public sealed  class GameManager : MonoBehaviour
 
         yield return new WaitUntil(check);
 
-        inputController.SetInputActive(true);
+        ballShootInputListener.SetInputActive(true);
         //블럭 다 내려오고 저장해줌
         SaveData();
     }

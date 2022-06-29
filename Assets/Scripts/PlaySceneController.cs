@@ -5,15 +5,45 @@ using MJ.Ads;
 using UnityEngine.SceneManagement;
 using MJ.Data;
 using MJ.Manager;
+using UnityEngine.InputSystem;
 
 public class PlaySceneController : MonoBehaviour
 {
     [SerializeField] private GameObject serverLoading;
     [SerializeField] private Collider2D gameOverTriggerCollider;
     [SerializeField] private GameObject resurrectPanel; //부활 사용할 건지 여부 UI패널
+    [SerializeField] private GameObject pausePanel; //현재 퍼즈 켜져있는지 여부만 체크
+
     private float currentTimeScale;
     private bool isClick = false;
     private bool hasResurrected = false; //부활 사용했는지
+
+
+    private void OnEnable()
+    {
+        InputController.escInput.performed += OnESCPerform;
+        InputController.escInput.Enable();
+    }
+
+    private void OnDisable()
+    {
+        InputController.escInput.performed += OnESCPerform;
+        InputController.escInput.Disable();
+    }
+
+    private void OnESCPerform(InputAction.CallbackContext _CallBackContext)
+    {
+        if(pausePanel.activeSelf)
+        {
+            pausePanel.SetActive(false);
+            ResetTimeScale();
+        }
+        else
+        {
+            pausePanel.SetActive(true);
+            SetTimeScale(0);
+        }
+    }
 
     public void SetTimeScale(float _TimeScale)
     {
@@ -106,6 +136,20 @@ public class PlaySceneController : MonoBehaviour
         yield return new WaitUntil(() => isDone);
         isClick = false;
         serverLoading.SetActive(false);
+
+        //어딜 가도 무조건 타임스케일 1로 해줌
+        Time.timeScale = 1;
         SceneManager.LoadScene(_SceneName);
+    }
+
+
+    private void OnApplicationPause(bool pause)
+    {
+        //퍼즈 상태이면서 패널 꺼져있는 경우만
+        if(pause && !pausePanel.activeSelf)
+        {
+            SetTimeScale(0);
+            pausePanel.SetActive(true);
+        }
     }
 }

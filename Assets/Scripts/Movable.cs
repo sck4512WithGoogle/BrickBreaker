@@ -23,6 +23,7 @@ public class Movable : MonoBehaviour
         Vector3 targetPos = myTransform.position + new Vector3(0, -Constants.BlockColumnSize, 0);
 
         //ÀÏ´Ü ¾ø¾Öº½
+
         //var firstTargetPos = targetPos + Vector3.up * -3f;
         //while ((myTransform.position - firstTargetPos).magnitude > 0.1f)
         //{
