@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "137257214277",
+    "project_id": "breakblock-e8e94",
+    "storage_bucket": "breakblock-e8e94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137257214277:android:9efc7ddf73c2d4eae91e2c",
+        "android_client_info": {
+          "package_name": "com.studio_bong.breakblock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "137257214277-f19b6i9fbti9gsm8f16jm71ac7tcq7a5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxe1CUjpdCkuTw7AJvdvh4CNgz4tMCQDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "137257214277-f19b6i9fbti9gsm8f16jm71ac7tcq7a5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
