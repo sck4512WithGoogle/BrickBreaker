@@ -8,6 +8,7 @@ public class PlayData
     public IceBlockData[] iceBlockData;
     public int ballCount;
     public Vector3 totalBallPos;
+    public int round;
 }
 
 [Serializable]

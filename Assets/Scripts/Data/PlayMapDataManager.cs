@@ -6,6 +6,11 @@ namespace MJ.Manager
     {
         private static readonly string MapSaveKey = "MapData";
 
+        public static void DeleteData()
+        {
+            PlayerPrefs.DeleteKey(MapSaveKey);
+        }
+
         public static void SaveData(PlayData _Data)
         {
             var data = JsonUtility.ToJson(_Data);

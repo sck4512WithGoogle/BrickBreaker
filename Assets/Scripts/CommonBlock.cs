@@ -1,10 +1,9 @@
 using UnityEngine;
 using MJ.Data;
-using System.Collections;
 using System;
 using MJ.Manager;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
+
 
 public class CommonBlock : Block
 {

@@ -4,13 +4,16 @@ using UnityEngine;
 using MJ.Ads;
 using UnityEngine.SceneManagement;
 using MJ.Data;
+using MJ.Manager;
 
 public class PlaySceneController : MonoBehaviour
 {
     [SerializeField] private GameObject serverLoading;
     [SerializeField] private Collider2D gameOverTriggerCollider;
+    [SerializeField] private GameObject resurrectPanel; //부활 사용할 건지 여부 UI패널
     private float currentTimeScale;
     private bool isClick = false;
+    private bool hasResurrected = false; //부활 사용했는지
 
     public void SetTimeScale(float _TimeScale)
     {
@@ -47,7 +50,7 @@ public class PlaySceneController : MonoBehaviour
     }
 
 
-    public void OnClickResurrect(GameObject _ResurrectPanel)
+    public void OnClickResurrect()
     {
         if (isClick)
         {
@@ -55,8 +58,8 @@ public class PlaySceneController : MonoBehaviour
         }
         isClick = true;
 
-        StartCoroutine(OnClickResurrectRoutine(_ResurrectPanel));
-        IEnumerator OnClickResurrectRoutine(GameObject _ResurrectPanel)
+        StartCoroutine(OnClickResurrectRoutine());
+        IEnumerator OnClickResurrectRoutine()
         {
             bool isDone = false;
             serverLoading.SetActive(true);
@@ -64,18 +67,36 @@ public class PlaySceneController : MonoBehaviour
             yield return new WaitUntil(() => isDone);
             isClick = false;
             serverLoading.SetActive(false);
-            _ResurrectPanel.SetActive(false);
+            resurrectPanel.SetActive(false);
 
             //부활 시킴
             Resurrect();
         }
     }
 
-    public void Resurrect()
+    //게임오버 트리거에 닿았을 때
+    public void OnGameOver()
+    {
+        if(hasResurrected)
+        {
+            //부활 했었으면 바로 게임오버로 넘어감
+            PlayMapDataManager.DeleteData();
+            SceneManager.LoadScene(SceneNames.GameOverSceneName);
+        }
+        else
+        {
+            //부활 안 했으면 이거 띄워줌
+            resurrectPanel.SetActive(true);
+        }
+    }
+
+    private void Resurrect()
     {
         GameManager.Instance.OnResurrect();
         gameOverTriggerCollider.enabled = true;
+        hasResurrected = true;
     }
+
 
     private IEnumerator ShowAdsAndLoadScene(string _SceneName)
     {

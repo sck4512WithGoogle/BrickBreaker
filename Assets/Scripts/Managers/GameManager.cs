@@ -32,7 +32,7 @@ public sealed  class GameManager : MonoBehaviour
     
     public static GameManager Instance => instance;
     private static GameManager instance;
-
+    private const float circleRaycaseRadius = 1.78f;
 
     private int round;
     private Vector3 firstClickPos;
@@ -83,8 +83,10 @@ public sealed  class GameManager : MonoBehaviour
             firstClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
             shootDirectionLength = 0f;
 
-            ballPreviewTransform.gameObject.SetActive(true);
             arrowTransform.gameObject.SetActive(true);
+
+            //에이밍 옵션 켜져있으면 보여줌
+            ballPreviewTransform.gameObject.SetActive(OptionManager.IsAiming);
         };
 
         inputController.OnDragAction += _Position =>
@@ -97,22 +99,23 @@ public sealed  class GameManager : MonoBehaviour
             shootDirection.Normalize();
             shootDirection = new Vector3(shootDirection.y >= 0 ? shootDirection.x : (shootDirection.x >= 0 ? 1 : -1), Mathf.Clamp(shootDirection.y, 0.2f, 1), 0f);
 
-
-            arrowTransform.position = totalBallPos;
+            
+            arrowTransform.position = startBall.transform.position; //원래 totalBallPos인데 에러 있어서
             arrowTransform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg);
-            //RaycastHit2D hit = Physics2D.Raycast(totalBallPos, shootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName));
-            //ballPreviewTransform.position = Physics2D.CircleCast(new Vector2(Mathf.Clamp(totalBallPos.x, -54, 54), Constants.BottomY), 1.72f, shootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName)).centroid;
+            
+            //에임 옵션 끈 상태면 안 보여줌
+            if(!OptionManager.IsAiming)
+            {
+                return;
+            }
 
-
-            //ballShootLineRenderer.SetPosition(0, totalBallPos);
-            //ballShootLineRenderer.SetPosition(1, ballPreviewTransform.position - shootDirection * 1.3f);
 
 
             //2바운드 인지
             bool isTwoBound = OptionManager.IsTwoBoundItemOptionOn;
             
             
-            var firstBoundCollider = Physics2D.CircleCast(new Vector2(Mathf.Clamp(totalBallPos.x, -54, 54), Constants.BottomY), 1.71f, shootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName));
+            var firstBoundCollider = Physics2D.CircleCast(new Vector2(Mathf.Clamp(totalBallPos.x, -54, 54), Constants.BottomY), circleRaycaseRadius, shootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName));
             ballShootLineRenderer.SetPosition(0, totalBallPos);
             ballShootLineRenderer.SetPosition(1, firstBoundCollider.centroid);
            
@@ -121,7 +124,7 @@ public sealed  class GameManager : MonoBehaviour
                 Vector3 secondShootDirection = Vector2.Reflect(shootDirection, firstBoundCollider.normal);
                 secondShootDirection.Normalize();
 
-                var secondPos = Physics2D.CircleCast(firstBoundCollider.centroid + (Vector2)secondShootDirection * 0.02f, 1.71f, secondShootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName)).centroid;
+                var secondPos = Physics2D.CircleCast(firstBoundCollider.centroid + (Vector2)secondShootDirection * 0.02f, circleRaycaseRadius, secondShootDirection, Mathf.Infinity, 1 << LayerMask.NameToLayer(Layers.WallLayerName) | 1 << LayerMask.NameToLayer(Layers.BlockLayerName)).centroid;
 
                 if (secondPos.y < Constants.BottomY)
                     secondPos.y = Constants.BottomY;
@@ -169,6 +172,7 @@ public sealed  class GameManager : MonoBehaviour
             totalBallPos = playData.totalBallPos;
             startBall.transform.position = totalBallPos;
             currentBallCount = playData.ballCount;
+            round = playData.round;
 
             var commonBlockData = playData.commonBlockData;
             for (int i = 0; i < commonBlockData.Length; i++)
@@ -446,6 +450,7 @@ public sealed  class GameManager : MonoBehaviour
         PlayData playMapData = new PlayData();
         playMapData.ballCount = currentBallCount;
         playMapData.totalBallPos = totalBallPos;
+        playMapData.round = round;
 
         List<CommonBlockData> commonBlocksData = new List<CommonBlockData>();
         for (int i = 0; i < commonBlocks.Count; i++)
