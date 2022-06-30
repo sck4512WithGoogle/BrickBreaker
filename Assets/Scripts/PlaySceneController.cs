@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using MJ.Data;
 using MJ.Manager;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlaySceneController : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class PlaySceneController : MonoBehaviour
     [SerializeField] private Collider2D gameOverTriggerCollider;
     [SerializeField] private GameObject resurrectPanel; //부활 사용할 건지 여부 UI패널
     [SerializeField] private GameObject pausePanel; //현재 퍼즈 켜져있는지 여부만 체크
+
+    [Header("아이템 버튼")]
+    [SerializeField] private Image[] itemButtonImages;
+    [SerializeField] private RectTransform[] itemButtonRects;
+
 
     private float currentTimeScale;
     private bool isClick = false;
@@ -30,6 +36,47 @@ public class PlaySceneController : MonoBehaviour
         InputController.escInput.performed += OnESCPerform;
         InputController.escInput.Disable();
     }
+
+    private void Start()
+    {
+        StartCoroutine(ButtonUpRoutine());
+    }
+
+    IEnumerator ButtonUpRoutine()
+    {
+        for (int i = 0; i < itemButtonImages.Length; i++)
+        {
+            itemButtonImages[i].raycastTarget = false;
+        }
+
+
+        Vector2[] startPoses = new Vector2[itemButtonRects.Length];
+        float moveLength = 200f;
+        for (int i = 0; i < itemButtonRects.Length; i++)
+        {
+            startPoses[i] = itemButtonRects[i].anchoredPosition;
+            itemButtonRects[i].anchoredPosition -= Vector2.up * moveLength;
+        }
+
+        float speed = 200f;
+        while (moveLength > 0f)
+        {
+            float moveAmount = Time.deltaTime * speed;
+            for (int i = 0; i < itemButtonRects.Length; i++)
+            {
+                itemButtonRects[i].anchoredPosition += Vector2.up * moveAmount;
+            }
+            moveLength -= moveAmount;
+            yield return null;
+        }
+
+        for (int i = 0; i < itemButtonImages.Length; i++)
+        {
+            itemButtonRects[i].anchoredPosition = startPoses[i];
+            itemButtonImages[i].raycastTarget = true;
+        }
+    }
+
 
     private void OnESCPerform(InputAction.CallbackContext _CallBackContext)
     {
@@ -130,15 +177,15 @@ public class PlaySceneController : MonoBehaviour
 
     private IEnumerator ShowAdsAndLoadScene(string _SceneName)
     {
+        Time.timeScale = 1;
         bool isDone = false;
-        serverLoading.SetActive(true);
-        AdsManager.ShowInterstitialAd(() => isDone = true, () => isDone = true);
+        serverLoading.SetActive(true);   
+        AdsManager.ShowInterstitialAd(() => isDone = true, () => isDone = true);   
         yield return new WaitUntil(() => isDone);
         isClick = false;
-        serverLoading.SetActive(false);
 
+        serverLoading.SetActive(false);
         //어딜 가도 무조건 타임스케일 1로 해줌
-        Time.timeScale = 1;
         SceneManager.LoadScene(_SceneName);
     }
 

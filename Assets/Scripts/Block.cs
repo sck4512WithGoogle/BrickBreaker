@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [DisallowMultipleComponent]
 public class Block : Movable
@@ -8,8 +9,9 @@ public class Block : Movable
     protected static int suicideDefinition = 4;
     protected int currentPosY;
     public int CurrentPosY => currentPosY;
+    public bool IsScaleChangeDone { get; private set; }
 
-    public override void MoveToBottom()
+    public sealed override void MoveToBottom()
     {
         base.MoveToBottom();
         currentPosY++;
@@ -31,7 +33,36 @@ public class Block : Movable
     }
 
     protected virtual void Die()
-    {
+    {}
 
+    public void OnCreateBlock()
+    {
+        StartCoroutine(OnCreateBlockRoutine());
+    }
+
+    private IEnumerator OnCreateBlockRoutine()
+    {
+        //움직이고 있는 것
+        IsScaleChangeDone = false;
+
+        //어차피 정육면체임
+        var startScale = myTransform.localScale;
+        myTransform.localScale = Vector3.zero;
+
+        float speed = 13f;
+        float movedLength = 0f;
+        while (movedLength < startScale.x)
+        {
+            movedLength += Time.deltaTime * speed;
+            myTransform.localScale = Vector3.one * movedLength;
+            yield return null;
+        }
+        myTransform.localScale = startScale;
+
+        //크기 바꾸는 거 다 끝남
+        IsScaleChangeDone = true;
+
+
+        MoveToBottom();
     }
 }

@@ -14,17 +14,17 @@ public class SpeedUpButtonUI : MonoBehaviour, IPointerClickHandler
     
     private void OnEnable()
     {
-        DataManager.Instance.OnSpeedUpItemCountChange += OnSpeedUpItemCountChange;
+        DataManager.OnSpeedUpItemCountChange += OnSpeedUpItemCountChange;
     }
 
     private void OnDisable()
     {
-        DataManager.Instance.OnSpeedUpItemCountChange -= OnSpeedUpItemCountChange;
+        DataManager.OnSpeedUpItemCountChange -= OnSpeedUpItemCountChange;
     }
 
     private void Start()
     {
-        OnSpeedUpItemCountChange(DataManager.Instance.SpeedUpItemCount);  
+        OnSpeedUpItemCountChange(DataManager.SpeedUpItemCount);  
     }
 
     private void UpdateSpeedUpOptionStatus()

@@ -7,6 +7,7 @@ namespace MJ.Manager
 
     public static class YieldContainer
     {
+        public readonly static WaitForFixedUpdate WaitForFixedUpdate = new WaitForFixedUpdate();
         private static Dictionary<float, WaitForSeconds> waitForSeconds;
         private static Dictionary<float, WaitForSecondsRealtime> waitForSecondRealTimes;
         static YieldContainer()

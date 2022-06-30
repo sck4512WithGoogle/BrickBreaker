@@ -5,7 +5,7 @@ using UnityEngine;
 public class Movable : MonoBehaviour
 {
     public bool IsMoving { get; set; } = false;
-    private Transform myTransform;
+    protected Transform myTransform;
     protected virtual void Awake()
     {
         myTransform = transform;

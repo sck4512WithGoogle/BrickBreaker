@@ -22,19 +22,19 @@ public class CommonBlock : Block
     private GameObject[] numbers;
     private Sprite startSprite;
     private Vector3 startScale;
-    private Vector3 takeDamageScale;
+    //private Vector3 takeDamageScale;
     private HorizontalLayoutGroup numberHorizontal;
     protected override void Awake()
     {
         base.Awake();
         startScale = transform.localScale;
-        takeDamageScale = new Vector3(startScale.x, startScale.y - 0.02f, startScale.z);
+        //takeDamageScale = new Vector3(startScale.x, startScale.y - 0.02f, startScale.z);
         numbers = new GameObject[0];
 
         startSprite = spriteRenderer.sprite;
         numberHorizontal = numbersParent.GetComponent<HorizontalLayoutGroup>();
     }
-
+    
     private void OnEnable()
     {
         spriteRenderer.sprite = startSprite;
@@ -53,7 +53,7 @@ public class CommonBlock : Block
     protected override void Die()
     {
         var blockBreakEffect = PoolManager.GetBlockBreakEffect();
-        blockBreakEffect.transform.position = transform.position;
+        blockBreakEffect.transform.position = myTransform.position;
         blockBreakEffect.SetActive(true);
 
         for (int i = 0; i < numbers.Length; i++)
@@ -114,17 +114,17 @@ public class CommonBlock : Block
             disableScore++;
         }
 
-        if (40 < count)
-        {
-            disableScore++;
-        }
-
         if (80 < count)
         {
             disableScore++;
         }
 
-        if (150 < count)
+        if (200 < count)
+        {
+            disableScore++;
+        }
+
+        if (300 < count)
         {
             disableScore++;
         }
@@ -136,7 +136,7 @@ public class CommonBlock : Block
         if(_Other.gameObject.CompareTag(Tags.BallTag))
         {
             count -= DataManager.BallDamage;
-            transform.localScale = takeDamageScale;
+            //myTransform.localScale = takeDamageScale;
             spriteRenderer.sprite = takeDamageSprite;
 
             SoundManager.PlayBlockSound();
@@ -144,7 +144,7 @@ public class CommonBlock : Block
 
             if(count > 0)
             {
-                ScoreManager.AddScore(1);
+                //ScoreManager.AddScore(1);
                 RenderNumber(count);
             }
             else

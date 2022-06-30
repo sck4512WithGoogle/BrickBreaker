@@ -10,14 +10,13 @@ namespace MJ.Data
         public static readonly float BlockColumnSize = 10.8f;
 
 
-        public static readonly float BallShootDelayTime = 0.07f;
-
 
         public static readonly int SpeedUpItemCountMax = 100;
         public static readonly int PowerUpItemCountMax = 100;
         public static readonly int TwoBoundItemCountMax = 80;
 
 
-        public static readonly float SpeedUpAmount = 2.3f;
+        public static readonly float SpeedUpAmount = 1.8f;
+        public static readonly float fadeSpeed = 1.1f;
     }
 }

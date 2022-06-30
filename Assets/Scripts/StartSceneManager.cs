@@ -6,35 +6,21 @@ using MJ.Manager;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Collections;
+using System;
 
 public class StartSceneManager : MonoBehaviour
 {
     [SerializeField] private Button continueButton;
-    private FirebaseAuth firebaseAuth;
-    private DataManager dataManager;
+    [SerializeField] private Image fadeImage;
 
     private void Awake()
     {
 #if UNITY_EDITOR
         //PlayerPrefs.DeleteAll();
 #endif
-        Application.targetFrameRate = 60;
-        dataManager = DataManager.Instance;
+                      
 
-
-        firebaseAuth = FirebaseAuth.DefaultInstance;
-
-        if(!dataManager.IsGuestLoginDone)
-        {
-            firebaseAuth.SignInAnonymouslyAsync();
-            dataManager.IsGuestLoginDone = true;
-        }
-
-        //¿É¼Ç
-        OptionManager.Init();
-
-        //±¤°í
-        AdsManager.Init();
         AdsManager.ShowBannerAd();
     }
 
@@ -54,6 +40,7 @@ public class StartSceneManager : MonoBehaviour
     private void Start()
     {
         continueButton.interactable = PlayMapDataManager.HasData;
+        StartCoroutine(Fade(true));
     }
 
     private void OnESCPerform(InputAction.CallbackContext _CallbackContext)
@@ -64,18 +51,60 @@ public class StartSceneManager : MonoBehaviour
 
     public void OnClickStart()
     {
-        dataManager.IsContinuePlay = false;
-        SceneManager.LoadScene(SceneNames.PlaySceneName);
+        DataManager.IsContinuePlay = false;
+        StartCoroutine(Fade(false, () => SceneManager.LoadScene(SceneNames.PlaySceneName)));
     }
 
     public void OnClickContinue()
     {
-        dataManager.IsContinuePlay = true; 
-        SceneManager.LoadScene(SceneNames.PlaySceneName);
+        DataManager.IsContinuePlay = true;
+        StartCoroutine(Fade(false, () => SceneManager.LoadScene(SceneNames.PlaySceneName)));
+    }
+
+    private IEnumerator Fade(bool _IsFadeIn, Action _OnEnd = null)
+    {
+        float speed = Constants.fadeSpeed;
+        fadeImage.gameObject.SetActive(true);
+        if(_IsFadeIn)
+        {
+            fadeImage.color = Color.black;
+
+            while (fadeImage.color.a > 0f)
+            {
+                var color = fadeImage.color;
+                color.a -= Time.deltaTime * speed;
+                fadeImage.color = color;
+                yield return null;
+            }
+            fadeImage.gameObject.SetActive(false);
+        }
+        else
+        {
+            fadeImage.color = new Color(0, 0, 0, 0);
+
+            while (fadeImage.color.a < 1f)
+            {
+                var color = fadeImage.color;
+                color.a += Time.deltaTime * speed;
+                fadeImage.color = color;
+                yield return null;
+            }
+        }
+        _OnEnd?.Invoke();
     }
 
     public void OnClickReview()
     {
-
+        switch (DataManager.CurrentStoreType)
+        {
+            case StoreType.GooglePlayStore:
+                break;
+            case StoreType.OneStore:
+                break;
+            case StoreType.GalaxyStore:
+                break;
+            case StoreType.AppStore:
+                break;
+        }
     }
 }

@@ -16,17 +16,17 @@ public class TwoBoundButtonUI : MonoBehaviour, IPointerClickHandler
 
     private void OnEnable()
     {
-        DataManager.Instance.OnTwoBoundItemCountChange += OnTwoBoundItemCountChange;
+        DataManager.OnTwoBoundItemCountChange += OnTwoBoundItemCountChange;
     }
 
     private void OnDisable()
     {
-        DataManager.Instance.OnTwoBoundItemCountChange -= OnTwoBoundItemCountChange;
+        DataManager.OnTwoBoundItemCountChange -= OnTwoBoundItemCountChange;
     }
 
     private void Start()
     {
-        OnTwoBoundItemCountChange(DataManager.Instance.TwoBoundItemCount);
+        OnTwoBoundItemCountChange(DataManager.TwoBoundItemCount);
     }
 
     private void OnTwoBoundItemCountChange(int _Count)

@@ -8,35 +8,17 @@ namespace MJ.Data
     {
         GooglePlayStore,OneStore, GalaxyStore, AppStore
     }
-    public sealed class DataManager : MonoBehaviour
+    public static class DataManager
     {
-        public static DataManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<DataManager>();
-                    if (instance == null)
-                    {
-                        instance = new GameObject("DataManager").AddComponent<DataManager>();
-                    }
-                }
-                return instance;
-            }
-        }
-        private static DataManager instance;
+        private static StoreType storeType = StoreType.GooglePlayStore;
+        public static StoreType CurrentStoreType => storeType;
+     
 
-        [SerializeField] private StoreType storeType = StoreType.GooglePlayStore;
-        public StoreType CurrentStoreType => storeType;
-        public bool IsGuestLoginDone { get; set; } = false;
+        public static event Action<int> OnSpeedUpItemCountChange;
+        public static event Action<int> OnPowerUpItemCountChange;
+        public static event Action<int> OnTwoBoundItemCountChange;
 
-
-        public event Action<int> OnSpeedUpItemCountChange;
-        public event Action<int> OnPowerUpItemCountChange;
-        public event Action<int> OnTwoBoundItemCountChange;
-
-        public int SpeedUpItemCount
+        public static int SpeedUpItemCount
         {
             get => speedUpItemCount;
             set
@@ -46,7 +28,7 @@ namespace MJ.Data
                 OnSpeedUpItemCountChange.Invoke(speedUpItemCount);
             }
         }
-        public int PowerUpItemCount
+        public static int PowerUpItemCount
         {
             get => powerUpItemCount;
             set
@@ -56,7 +38,7 @@ namespace MJ.Data
                 OnPowerUpItemCountChange.Invoke(powerUpItemCount);
             }
         }
-        public int TwoBoundItemCount
+        public static int TwoBoundItemCount
         {
             get => twoBoundItemCount;
             set
@@ -67,9 +49,9 @@ namespace MJ.Data
             }
         }
 
-        private int speedUpItemCount;
-        private int powerUpItemCount;
-        private int twoBoundItemCount;
+        private static int speedUpItemCount;
+        private static int powerUpItemCount;
+        private static int twoBoundItemCount;
 
         private const string SpeedUpItemKey = "SpeedUp";
         private const string PowerUpItemKey = "PowerUp";
@@ -87,20 +69,13 @@ namespace MJ.Data
         }
         public static int ballDamage = 1;
 
-        public bool IsContinuePlay { get; set; } = false;
+        public static bool IsContinuePlay { get; set; } = false;
 
-        public void Awake()
+        public static void Init()
         {
-            if(instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
+#if UNITY_EDITOR
+            storeType = StoreType.GooglePlayStore;
+#endif
 
             speedUpItemCount = PlayerPrefs.GetInt(SpeedUpItemKey, Constants.SpeedUpItemCountMax);
             powerUpItemCount = PlayerPrefs.GetInt(PowerUpItemKey, Constants.PowerUpItemCountMax);

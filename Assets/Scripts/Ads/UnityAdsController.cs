@@ -100,7 +100,7 @@ namespace MJ.Ads
                     if (isLoaded)
                     {
                         Advertisement.Show(interstitialAdsID, this);
-                        break;
+                        yield break;
                     }
                     yield return null;
                 }
@@ -140,7 +140,7 @@ namespace MJ.Ads
                     if(isLoaded)
                     {
                         Advertisement.Show(rewardedAdsID, this);
-                        break;
+                        yield break;
                     }
                     yield return null;
                 }

@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using MJ.Manager;
 using MJ.Data;
+using UnityEngine.InputSystem;
 
 public class GameOverSceneController : MonoBehaviour
 {
@@ -28,6 +27,23 @@ public class GameOverSceneController : MonoBehaviour
         bestScoreText.text += ScoreManager.BestScore.ToString();
     }
 
+    private void OnEnable()
+    {
+        InputController.escInput.performed += OnESCPerform;
+        InputController.escInput.Enable();
+    }
+
+    private void OnDisable()
+    {
+        InputController.escInput.performed -= OnESCPerform;
+        InputController.escInput.Disable();
+    }
+
+    private void OnESCPerform(InputAction.CallbackContext _CallbackContext)
+    {
+        SceneManager.LoadScene(SceneNames.MainSceneName);
+    }
+
     public void OnClickHome()
     {
         SceneManager.LoadScene(SceneNames.MainSceneName);
@@ -35,7 +51,7 @@ public class GameOverSceneController : MonoBehaviour
 
     public void OnClickStart()
     {
-        DataManager.Instance.IsContinuePlay = false;
+        DataManager.IsContinuePlay = false;
         SceneManager.LoadScene(SceneNames.PlaySceneName);
     }
 }

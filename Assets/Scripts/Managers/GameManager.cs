@@ -44,19 +44,17 @@ public sealed  class GameManager : MonoBehaviour
 
 
     private List<Ball> balls;
-    private List<CommonBlock> commonBlocks;
-    private List<IceBlock> iceBlocks;
-    private List<Movable> moves;
+    private HashSet<CommonBlock> commonBlocks;
+    private HashSet<IceBlock> iceBlocks;
+    private HashSet<Movable> moves;
 
     private int currentBallCount;
-    private DataManager dataManager;
 
     private void Awake()
     {     
         PoolManager.Init();
         ScoreManager.Init();
-        dataManager = DataManager.Instance;
-
+   
         instance = this;
         round = 1;
         currentBallCount = 1;
@@ -65,9 +63,9 @@ public sealed  class GameManager : MonoBehaviour
         balls = new List<Ball>();
         //balls.Add(startBall);
 
-        commonBlocks = new List<CommonBlock>();
-        iceBlocks = new List<IceBlock>();
-        moves = new List<Movable>();
+        commonBlocks = new HashSet<CommonBlock>();
+        iceBlocks = new HashSet<IceBlock>();
+        moves = new HashSet<Movable>();
     }
 
 
@@ -161,7 +159,7 @@ public sealed  class GameManager : MonoBehaviour
 
         ballShootInputListener.SetInputActive(true);
 
-        if(dataManager.IsContinuePlay)
+        if(DataManager.IsContinuePlay)
         {
             var playData = PlayMapDataManager.GetData();
             totalBallPos = playData.totalBallPos;
@@ -200,7 +198,9 @@ public sealed  class GameManager : MonoBehaviour
         }
         else
         {
-            CreateBlocks();
+            
+            //1초 뒤에 블럭나오게 함
+            CoroutineExecuter.ExcuteAfterWaitTime(CreateBlocks, 0.8f);
         }
 
 
@@ -250,90 +250,124 @@ public sealed  class GameManager : MonoBehaviour
 
     private void CreateBlocks()
     {
-        int count;
-        int randBlock = Random.Range(0, 24);
-        if (round <= 10)
+        StartCoroutine(CreateBlocksRoutine());
+        IEnumerator CreateBlocksRoutine()
         {
-            count = randBlock < 16 ? 1 : 2;
-        }
-        else if (round <= 20)
-        {
-            count = randBlock < 8 ? 1 : (randBlock < 6 ? 2 : 3);
-        }
-        else if (round <= 40)
-        {
-            count = randBlock < 9 ? 2 : (randBlock < 18 ? 3 : 4);
-        }
-        else
-        {
-            count = randBlock < 8 ? 2 : randBlock < 16 ? 3 : (randBlock < 20 ? 4 : 5);
-        }
-
-        List<Vector3> spawnPoses = new List<Vector3>();
-        for (int i = 0; i < spawnTransforms.Length; i++)
-        {
-            spawnPoses.Add(spawnTransforms[i].position);
-        }
- 
-        for (int i = 0; i < count; i++)
-        {
-            int rand = Random.Range(0, spawnPoses.Count);
-            var block = PoolManager.GetCommonBlock();
-            block.transform.position = spawnPoses[rand];
-            block.SetNumber(round);
-            block.gameObject.SetActive(true);
-            if (!commonBlocks.Contains(block))
+            int count;
+            int randBlock = Random.Range(0, 24);
+            if (round <= 10)
             {
+                count = randBlock < 16 ? 1 : 2;
+            }
+            else if (round <= 20)
+            {
+                count = randBlock < 8 ? 1 : (randBlock < 6 ? 2 : 3);
+            }
+            else if (round <= 40)
+            {
+                count = randBlock < 9 ? 2 : (randBlock < 18 ? 3 : 4);
+            }
+            else
+            {
+                count = randBlock < 8 ? 2 : randBlock < 16 ? 3 : (randBlock < 20 ? 4 : 5);
+            }
+
+            List<Vector3> spawnPoses = new List<Vector3>();
+            for (int i = 0; i < spawnTransforms.Length; i++)
+            {
+                spawnPoses.Add(spawnTransforms[i].position);
+            }
+
+            LinkedList<Block> blocks = new LinkedList<Block>();
+            for (int i = 0; i < count; i++)
+            {
+                int rand = Random.Range(0, spawnPoses.Count);
+                var block = PoolManager.GetCommonBlock();
+                block.transform.position = spawnPoses[rand];
+                block.SetNumber(round);
+                block.gameObject.SetActive(true);
+                //if (!commonBlocks.Contains(block))
+                //{
+                //    commonBlocks.Add(block);
+                //    moves.Add(block);
+                //}
                 commonBlocks.Add(block);
-                moves.Add(block);
+                //얘는 나중에 넣어주려고 함
+                blocks.AddFirst(block);
+                //일단 뺌
+                moves.Remove(block);
+                //내려줌
+                block.OnCreateBlock();
+
+                spawnPoses.RemoveAt(rand);
             }
 
-            spawnPoses.RemoveAt(rand);
-        }
-
-        var iceBlock = PoolManager.GetIceBlock();
-        iceBlock.gameObject.SetActive(true);
-        iceBlock.transform.position = spawnPoses[Random.Range(0, spawnPoses.Count)];
-        var iceBlockComponent = iceBlock.GetComponent<IceBlock>();
-        if(!iceBlocks.Contains(iceBlockComponent))
-        {
-            iceBlocks.Add(iceBlockComponent);
-        }
-        if (!moves.Contains(iceBlockComponent))
-        {
-            moves.Add(iceBlockComponent);
-        }
-
-        //블럭들 내려줌
-        foreach (var movableObj in moves)
-        {
-            if(movableObj.gameObject.activeSelf)
+            var iceBlock = PoolManager.GetIceBlock();
+            iceBlock.gameObject.SetActive(true);
+            iceBlock.transform.position = spawnPoses[Random.Range(0, spawnPoses.Count)];
+            iceBlock.OnCreateBlock();
+            if (!iceBlocks.Contains(iceBlock))
             {
-                movableObj.MoveToBottom();
+                iceBlocks.Add(iceBlock);
             }
+            //나중에 넣어줌
+            blocks.AddFirst(iceBlock);
+            moves.Remove(iceBlock);
+
+
+            Func<bool> check = () =>
+            {
+                foreach (var block in blocks)
+                {
+                    if (!block.IsScaleChangeDone)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            };
+            yield return new WaitUntil(check); //다 내려올때까지 기다림
+
+            //블럭들 내려줌
+            foreach (var movableObj in moves)
+            {
+                if (movableObj.gameObject.activeSelf)
+                {
+                    movableObj.MoveToBottom();
+                }
+            }
+
+            //다 내리고 나서 넣어줌
+            foreach (var movableObj in blocks)
+            {
+                moves.Add(movableObj);
+            }
+
+
+
+
+
+            //다 내려왔는지 체크함
+            StartCoroutine(CheckAllMovableObjMovedone());
         }
-
-
-        //다 내려왔는지 체크함
-        StartCoroutine(CheckAllMovableObjMovedone());
     }
 
     IEnumerator CheckAllMovableObjMovedone()
     {
         Func<bool> check = () =>
         {
-            for (int i = 0; i < moves.Count; i++)
+            foreach (var moveObj in moves)
             {
-                if(!moves[i].gameObject.activeSelf)
+                if(!moveObj.gameObject.activeSelf)
                 {
                     continue;
                 }
 
-                if(moves[i].IsMoving)
+                if (moveObj.IsMoving)
                 {
                     return false;
                 }
-            }
+            }            
             return true;
         };
 
@@ -348,12 +382,12 @@ public sealed  class GameManager : MonoBehaviour
     {
         if (OptionManager.IsTwoBoundItemOptionOn)
         {
-            --dataManager.TwoBoundItemCount;
+            --DataManager.TwoBoundItemCount;
         }
         if(OptionManager.IsSpeedUpItemOptionOn)
         {
             Time.timeScale = Constants.SpeedUpAmount;
-            --dataManager.SpeedUpItemCount;
+            --DataManager.SpeedUpItemCount;
         }
 
         int shootBallCount;
@@ -362,7 +396,7 @@ public sealed  class GameManager : MonoBehaviour
             var ballCountAndDamage = GetBallCountAndDamage(currentBallCount);
             DataManager.BallDamage = ballCountAndDamage.Damage;
             shootBallCount = ballCountAndDamage.Count;
-            --dataManager.PowerUpItemCount;
+            --DataManager.PowerUpItemCount;
         }
         else
         {
@@ -386,7 +420,11 @@ public sealed  class GameManager : MonoBehaviour
             ball.gameObject.SetActive(true);
             ball.transform.position = startPos;
             ball.Shoot(shootDirection);
-            yield return YieldContainer.GetWaitForSeconds(Constants.BallShootDelayTime);
+
+            //3번 기다림
+            yield return YieldContainer.WaitForFixedUpdate;
+            yield return YieldContainer.WaitForFixedUpdate;
+            yield return YieldContainer.WaitForFixedUpdate;
         }
 
         StartCoroutine(CheckAllBallsMoving());
@@ -448,29 +486,30 @@ public sealed  class GameManager : MonoBehaviour
         playMapData.round = round;
 
         List<CommonBlockData> commonBlocksData = new List<CommonBlockData>();
-        for (int i = 0; i < commonBlocks.Count; i++)
+        foreach (var commonBlock in commonBlocks)
         {
-            if (commonBlocks[i].gameObject.activeSelf)
+            if (commonBlock.gameObject.activeSelf)
             {
-                var pos = commonBlocks[i].transform.position;
-                var posY = commonBlocks[i].CurrentPosY;
-                var count = commonBlocks[i].Count;
-                var hasTakeDamaged = commonBlocks[i].HasTakeDamaged;
+                var pos = commonBlock.transform.position;
+                var posY = commonBlock.CurrentPosY;
+                var count = commonBlock.Count;
+                var hasTakeDamaged = commonBlock.HasTakeDamaged;
                 commonBlocksData.Add(new CommonBlockData(pos, posY, count, hasTakeDamaged));
             }
         }
+     
 
         List<IceBlockData> iceBlocksData = new List<IceBlockData>();
-        for (int i = 0; i < iceBlocks.Count; i++)
+        foreach (var iceBlock in iceBlocks)
         {
-            if (iceBlocks[i].gameObject.activeSelf)
+            if (iceBlock.gameObject.activeSelf)
             {
-                var pos = iceBlocks[i].transform.position;
-                var posY = iceBlocks[i].CurrentPosY;
+                var pos = iceBlock.transform.position;
+                var posY = iceBlock.CurrentPosY;
                 iceBlocksData.Add(new IceBlockData(pos, posY));
             }
         }
-               
+                     
 
         playMapData.commonBlockData = commonBlocksData.ToArray();
         playMapData.iceBlockData = iceBlocksData.ToArray();

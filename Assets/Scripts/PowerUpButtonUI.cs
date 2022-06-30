@@ -17,18 +17,18 @@ public class PowerUpButtonUI : MonoBehaviour, IPointerClickHandler
 
     private void OnEnable()
     {
-        DataManager.Instance.OnPowerUpItemCountChange += OnPowerUpItemCountChange;
+        DataManager.OnPowerUpItemCountChange += OnPowerUpItemCountChange;
     }
 
     private void OnDisable()
     {
-        DataManager.Instance.OnPowerUpItemCountChange -= OnPowerUpItemCountChange;
+        DataManager.OnPowerUpItemCountChange -= OnPowerUpItemCountChange;
     }
 
 
     private void Start()
     {
-        OnPowerUpItemCountChange(DataManager.Instance.PowerUpItemCount);
+        OnPowerUpItemCountChange(DataManager.PowerUpItemCount);
     }
     private void OnPowerUpItemCountChange(int _Count)
     {
