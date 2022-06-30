@@ -54,6 +54,9 @@ public class IntroSceneController : MonoBehaviour
 
         yield return YieldContainer.GetWaitForSeconds(2f);
 
+
+        AdsManager.ShowBannerAd();
+
         //이후 씬이동
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MainSceneName);
     }

@@ -21,9 +21,14 @@ public class CoroutineExecuter : MonoBehaviour
 
 
 
-        public void Excute(IEnumerator _Coroutine)
+        public Coroutine Excute(IEnumerator _Coroutine)
         {
-            StartCoroutine(_Coroutine);
+            return StartCoroutine(_Coroutine);
+        }
+
+        public void MyStopCoroutine(Coroutine _Coroutine)
+        {
+            StopCoroutine(_Coroutine);
         }
 
         public void ExcuteAfterWaitTime(System.Action _Action, float _WaitTime)
@@ -37,9 +42,14 @@ public class CoroutineExecuter : MonoBehaviour
         }
     }
 
-    public static void Excute(IEnumerator _Coroutine)
+    public static Coroutine Excute(IEnumerator _Coroutine)
     {
-        Behaviour.Init.Excute(_Coroutine);
+        return Behaviour.Init.Excute(_Coroutine);
+    }
+
+    public static void MyStopCoroutine(Coroutine _Coroutine)
+    {
+        Behaviour.Init.MyStopCoroutine(_Coroutine);
     }
 
     public static void ExcuteAfterWaitTime(System.Action _Action, float _WaitTime)

@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlockBreak
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: d386d85609ffa7c44ae2693324f92df7, type: 3}
+    - {fileID: 2800000, guid: 31391cf719b73a7409d315bd8b57c1da, type: 3}
+    - {fileID: 2800000, guid: 3d3e8e0e6afffe641bf54ffbf723b027, type: 3}
+    - {fileID: 2800000, guid: 2f65c2e5695cd3b4ba1bb4c7ad683204, type: 3}
+    - {fileID: 2800000, guid: c75ba59e98a12a94bb3fa9ef6aabb6ce, type: 3}
+    - {fileID: 2800000, guid: ffd2f97b7d6a587459b096ae29a6967e, type: 3}
+    - {fileID: 2800000, guid: 701aee2324cfdc64ebcceb325dffb6bc, type: 3}
+    - {fileID: 2800000, guid: 0c259eb5281d2d449a987baabc79cba9, type: 3}
+    - {fileID: 2800000, guid: 17683cc8bdd31e64a9d4d903b939ae9f, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 701aee2324cfdc64ebcceb325dffb6bc, type: 3}
+  - {fileID: 21300000, guid: 0c259eb5281d2d449a987baabc79cba9, type: 3}
+  - {fileID: 21300000, guid: 2f65c2e5695cd3b4ba1bb4c7ad683204, type: 3}
+  - {fileID: 21300000, guid: d386d85609ffa7c44ae2693324f92df7, type: 3}
+  - {fileID: 21300000, guid: 31391cf719b73a7409d315bd8b57c1da, type: 3}
+  - {fileID: 21300000, guid: 17683cc8bdd31e64a9d4d903b939ae9f, type: 3}
+  - {fileID: 21300000, guid: ffd2f97b7d6a587459b096ae29a6967e, type: 3}
+  - {fileID: 21300000, guid: 3d3e8e0e6afffe641bf54ffbf723b027, type: 3}
+  - {fileID: 21300000, guid: c75ba59e98a12a94bb3fa9ef6aabb6ce, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 6
+  - 7
+  - 3
+  - 0
+  - 1
+  - 8
+  - 5
+  - 2
+  - 4
+  m_RenderDataMap: {}
+  m_Tag: BlockBreak
+  m_IsVariant: 0

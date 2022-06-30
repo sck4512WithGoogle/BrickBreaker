@@ -12,7 +12,10 @@ using System;
 public class StartSceneManager : MonoBehaviour
 {
     [SerializeField] private Button continueButton;
-    [SerializeField] private Image fadeImage;
+    [SerializeField] private Graphic fadeImage;
+    [SerializeField] private Graphic darkImage;
+    [SerializeField] private GameObject logo;
+    [SerializeField] private GameObject[] optionAndTutorialButtons;
 
     private void Awake()
     {
@@ -21,7 +24,7 @@ public class StartSceneManager : MonoBehaviour
 #endif
                       
 
-        AdsManager.ShowBannerAd();
+        //AdsManager.ShowBannerAd();
     }
 
 
@@ -37,12 +40,14 @@ public class StartSceneManager : MonoBehaviour
         InputController.escInput.Disable();
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         continueButton.interactable = PlayMapDataManager.HasData;
-        StartCoroutine(Fade(true));
+        yield return YieldContainer.WaitForFixedUpdate;
+        StartCoroutine(Fade(true, fadeImage, null, 1.3f));
     }
 
+   
     private void OnESCPerform(InputAction.CallbackContext _CallbackContext)
     {
         Application.Quit();
@@ -51,42 +56,52 @@ public class StartSceneManager : MonoBehaviour
 
     public void OnClickStart()
     {
+        //¿Ã∞Õµµ ≤®¡‹
+        logo.SetActive(false);
+        for (int i = 0; i < optionAndTutorialButtons.Length; i++)
+        {
+            optionAndTutorialButtons[i].SetActive(false);
+        }
+
+
         DataManager.IsContinuePlay = false;
-        StartCoroutine(Fade(false, () => SceneManager.LoadScene(SceneNames.PlaySceneName)));
+        StartCoroutine(Fade(true, darkImage, () => SceneManager.LoadScene(SceneNames.PlaySceneName), 2f));
     }
 
     public void OnClickContinue()
     {
+        //¿Ã∞Õµµ ≤®¡‹
+        logo.SetActive(false);
+        for (int i = 0; i < optionAndTutorialButtons.Length; i++)
+        {
+            optionAndTutorialButtons[i].SetActive(false);
+        }
+
         DataManager.IsContinuePlay = true;
-        StartCoroutine(Fade(false, () => SceneManager.LoadScene(SceneNames.PlaySceneName)));
+        StartCoroutine(Fade(true, darkImage, () => SceneManager.LoadScene(SceneNames.PlaySceneName), 2f));
     }
 
-    private IEnumerator Fade(bool _IsFadeIn, Action _OnEnd = null)
+    private IEnumerator Fade(bool _IsFadeIn, Graphic _Graphic, Action _OnEnd = null, float _Speed = 1.1f)
     {
-        float speed = Constants.fadeSpeed;
-        fadeImage.gameObject.SetActive(true);
+        _Graphic.gameObject.SetActive(true);
         if(_IsFadeIn)
         {
-            fadeImage.color = Color.black;
-
-            while (fadeImage.color.a > 0f)
+            while (_Graphic.color.a > 0f)
             {
-                var color = fadeImage.color;
-                color.a -= Time.deltaTime * speed;
-                fadeImage.color = color;
+                var color = _Graphic.color;
+                color.a -= Time.deltaTime * _Speed;
+                _Graphic.color = color;
                 yield return null;
             }
-            fadeImage.gameObject.SetActive(false);
+            _Graphic.gameObject.SetActive(false);
         }
         else
         {
-            fadeImage.color = new Color(0, 0, 0, 0);
-
-            while (fadeImage.color.a < 1f)
+            while (_Graphic.color.a < 1f)
             {
-                var color = fadeImage.color;
-                color.a += Time.deltaTime * speed;
-                fadeImage.color = color;
+                var color = _Graphic.color;
+                color.a += Time.deltaTime * _Speed;
+                _Graphic.color = color;
                 yield return null;
             }
         }

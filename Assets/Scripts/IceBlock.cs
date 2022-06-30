@@ -1,13 +1,70 @@
 using UnityEngine;
 using MJ.Data;
 using MJ.Manager;
+using System.Collections;
 
 
 public class IceBlock : Block
 {
+    [SerializeField] private SpriteRenderer secondBlockSpriteRenderer;
+    
+    private readonly static float timePeriod = 1.5f;
+    private static float currentTime = 0f;
+    private static Coroutine changeTimePeriodRoutine;
+    public static void ChangeTimePeriod()
+    {
+        changeTimePeriodRoutine = CoroutineExecuter.Excute(ChangeTimePeriodRoutine());
+    }
+    public static void StopChangeTimePeriod()
+    {
+        CoroutineExecuter.MyStopCoroutine(changeTimePeriodRoutine);
+    }
+    private static IEnumerator ChangeTimePeriodRoutine()
+    {
+        float max = timePeriod * 2f;
+        while (true)
+        {
+            currentTime = 0f;
+            while (currentTime < max)
+            {
+                currentTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+    }
+
+
+
     private void OnEnable()
     {
         currentPosY = 1;    
+    }
+
+    private void Update()
+    {
+        if(currentTime > 0f)
+        {
+            //0 ~ 1.5사이일 때
+            if (currentTime <= timePeriod)
+            {
+                SetSecondBlockAlpha(currentTime / timePeriod);
+            }
+            else //1.5 ~ 3사이일 때
+            {
+                SetSecondBlockAlpha(2f - (currentTime / timePeriod));
+            }
+        }
+        else
+        {
+            SetSecondBlockAlpha(0);
+        }
+    }
+
+    private void SetSecondBlockAlpha(float _Alpha)
+    {
+        var color = secondBlockSpriteRenderer.color;
+        color.a = _Alpha;
+        secondBlockSpriteRenderer.color = color;
     }
 
     protected override void Die()

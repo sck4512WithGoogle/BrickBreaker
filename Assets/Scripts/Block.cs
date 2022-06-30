@@ -37,19 +37,17 @@ public class Block : Movable
 
     public void OnCreateBlock()
     {
+        IsScaleChangeDone = false;
         StartCoroutine(OnCreateBlockRoutine());
     }
 
     private IEnumerator OnCreateBlockRoutine()
     {
-        //움직이고 있는 것
-        IsScaleChangeDone = false;
-
         //어차피 정육면체임
         var startScale = myTransform.localScale;
         myTransform.localScale = Vector3.zero;
 
-        float speed = 13f;
+        float speed = 33f;
         float movedLength = 0f;
         while (movedLength < startScale.x)
         {
@@ -61,8 +59,5 @@ public class Block : Movable
 
         //크기 바꾸는 거 다 끝남
         IsScaleChangeDone = true;
-
-
-        MoveToBottom();
     }
 }

@@ -7,7 +7,7 @@ namespace MJ.Data
         public static readonly float ClampX = 47.872f;
         public static readonly float BottomY = -42f;
         public static readonly float BlockRowSize = 16.4f;
-        public static readonly float BlockColumnSize = 10.8f;
+        public static readonly float BlockColumnSize = 10.82f;
 
 
 

@@ -68,6 +68,11 @@ public sealed  class GameManager : MonoBehaviour
         moves = new HashSet<Movable>();
     }
 
+    private void OnDisable()
+    {
+        //게임 끝나면 끔
+        IceBlock.StopChangeTimePeriod();    
+    }
 
     private void Start()
     {
@@ -157,8 +162,7 @@ public sealed  class GameManager : MonoBehaviour
             }
         };
 
-        ballShootInputListener.SetInputActive(true);
-
+       
         if(DataManager.IsContinuePlay)
         {
             var playData = PlayMapDataManager.GetData();
@@ -174,7 +178,7 @@ public sealed  class GameManager : MonoBehaviour
                 commonBlock.SetPosY(commonBlockData[i].posY - 1);
                 commonBlock.SetNumber(commonBlockData[i].leftCount);
                 commonBlock.transform.position = commonBlockData[i].position + Vector3.up * Constants.BlockColumnSize;
-                commonBlock.SetTakeDamage(commonBlockData[i].hasTakeDamaged);
+                commonBlock.SetDamageCount(commonBlockData[i].damageCount);
 
                 commonBlocks.Add(commonBlock);
                 moves.Add(commonBlock);
@@ -195,12 +199,20 @@ public sealed  class GameManager : MonoBehaviour
             {
                 moveObj.MoveToBottom();
             }
+            CoroutineExecuter.ExcuteAfterWaitTime(() => 
+            {
+                IceBlock.ChangeTimePeriod();
+                ballShootInputListener.SetInputActive(true);
+            }, 0.7f);
         }
         else
-        {
-            
+        {            
             //1초 뒤에 블럭나오게 함
-            CoroutineExecuter.ExcuteAfterWaitTime(CreateBlocks, 0.8f);
+            CoroutineExecuter.ExcuteAfterWaitTime(() => 
+            {
+                CreateBlocks();
+                IceBlock.ChangeTimePeriod();
+            }, 0.7f);
         }
 
 
@@ -278,7 +290,7 @@ public sealed  class GameManager : MonoBehaviour
                 spawnPoses.Add(spawnTransforms[i].position);
             }
 
-            LinkedList<Block> blocks = new LinkedList<Block>();
+            List<Block> blocks = new List<Block>();
             for (int i = 0; i < count; i++)
             {
                 int rand = Random.Range(0, spawnPoses.Count);
@@ -286,16 +298,12 @@ public sealed  class GameManager : MonoBehaviour
                 block.transform.position = spawnPoses[rand];
                 block.SetNumber(round);
                 block.gameObject.SetActive(true);
-                //if (!commonBlocks.Contains(block))
-                //{
-                //    commonBlocks.Add(block);
-                //    moves.Add(block);
-                //}
+              
                 commonBlocks.Add(block);
-                //얘는 나중에 넣어주려고 함
-                blocks.AddFirst(block);
+                //체크용도
+                blocks.Add(block);
                 //일단 뺌
-                moves.Remove(block);
+                moves.Add(block);
                 //내려줌
                 block.OnCreateBlock();
 
@@ -311,8 +319,8 @@ public sealed  class GameManager : MonoBehaviour
                 iceBlocks.Add(iceBlock);
             }
             //나중에 넣어줌
-            blocks.AddFirst(iceBlock);
-            moves.Remove(iceBlock);
+            blocks.Add(iceBlock);
+            moves.Add(iceBlock);
 
 
             Func<bool> check = () =>
@@ -337,13 +345,7 @@ public sealed  class GameManager : MonoBehaviour
                 }
             }
 
-            //다 내리고 나서 넣어줌
-            foreach (var movableObj in blocks)
-            {
-                moves.Add(movableObj);
-            }
-
-
+       
 
 
 
@@ -493,7 +495,7 @@ public sealed  class GameManager : MonoBehaviour
                 var pos = commonBlock.transform.position;
                 var posY = commonBlock.CurrentPosY;
                 var count = commonBlock.Count;
-                var hasTakeDamaged = commonBlock.HasTakeDamaged;
+                var hasTakeDamaged = commonBlock.CurrentDamageCount;
                 commonBlocksData.Add(new CommonBlockData(pos, posY, count, hasTakeDamaged));
             }
         }

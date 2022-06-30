@@ -67,7 +67,7 @@ namespace MJ.Data
                     ballDamage = 1;
             }
         }
-        public static int ballDamage = 1;
+        private static int ballDamage = 1;
 
         public static bool IsContinuePlay { get; set; } = false;
 

@@ -146,7 +146,6 @@ namespace MJ.Ads
             RequestBanner();
             CoroutineExecuter.Excute(ShowBannerRoutine());
 
-
             IEnumerator ShowBannerRoutine()
             {
                 float timer = 1.5f;
