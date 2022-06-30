@@ -16,7 +16,7 @@ public class StartSceneManager : MonoBehaviour
     private void Awake()
     {
 #if UNITY_EDITOR
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 #endif
         Application.targetFrameRate = 60;
         dataManager = DataManager.Instance;
@@ -37,6 +37,7 @@ public class StartSceneManager : MonoBehaviour
         AdsManager.Init();
         AdsManager.ShowBannerAd();
     }
+
 
     private void OnEnable()
     {

@@ -26,17 +26,26 @@ namespace MJ.Ads
         private bool isBannerShow = false; //배너 광고 현재 나왔는지 여부 체크
         private bool isBannerLoaded = false;
 
+
+        private string[] rewardAdsIds;
+        private int curRewardAdsIndex;
+
+
         public void Init()
         {
-            //    interstitialAdID = "ca-app-pub-3940256099942544/1033173712";
-            //    rewardedAdID = "ca-app-pub-3940256099942544/5354046379";
-
-            //    List<string> deviceIds = new List<string>();
-            //    deviceIds.Add("A1455337DC567126");
-            //    RequestConfiguration requestConfiguration = new RequestConfiguration.Builder().SetTestDeviceIds(deviceIds).build();
-            //    MobileAds.SetRequestConfiguration(requestConfiguration);
-
-
+            rewardAdsIds = new string[4];
+#if UNITY_ANDROID
+            rewardAdsIds[0] = "ca-app-pub-1270408828484515/6568824267";
+            rewardAdsIds[1] = "ca-app-pub-1270408828484515/7318815067";
+            rewardAdsIds[2] = "ca-app-pub-1270408828484515/8073477625";
+            rewardAdsIds[3] = "ca-app-pub-1270408828484515/5064170907";
+#elif UNITY_IOS
+            rewardAdsIds[0] = "ca-app-pub-1270408828484515/9709992925";
+            rewardAdsIds[1] = "ca-app-pub-1270408828484515/2789361351";
+            rewardAdsIds[2] = "ca-app-pub-1270408828484515/7466972963";
+            rewardAdsIds[3] = "ca-app-pub-1270408828484515/6864337731";
+#endif
+            curRewardAdsIndex = UnityEngine.Random.Range(0, rewardAdsIds.Length);
 
 
             MobileAds.SetiOSAppPauseOnBackground(true);
@@ -46,7 +55,7 @@ namespace MJ.Ads
                 List<String> deviceIds = new List<String>() { AdRequest.TestDeviceSimulator };
 
                 // Add some test device IDs (replace with your own device IDs).
-#if UNITY_IPHONE
+#if UNITY_IOS
         deviceIds.Add("96e23e80653bb28980d3f40beb58915c");
 #elif UNITY_ANDROID
                 deviceIds.Add("75EF8D155528C04DACBBA6F36F433035");
@@ -100,7 +109,7 @@ namespace MJ.Ads
             {
 #if UNITY_ANDROID
                 adUnitId = "ca-app-pub-3940256099942544/6300978111";
-#elif UNITY_IPHONE
+#elif UNITY_IOS
         adUnitId = "ca-app-pub-3940256099942544/2934735716";
 #else
         adUnitId = "unexpected_platform";
@@ -109,10 +118,16 @@ namespace MJ.Ads
             }
             else
             {
-
+#if UNITY_ANDROID
+                adUnitId = "ca-app-pub-1270408828484515/2036614515";
+#elif UNITY_IPHONE
+        adUnitId = "ca-app-pub-3940256099942544/2934735716";
+#else
+        adUnitId = "unexpected_platform";
+#endif
             }
 
-            
+
             // Create a 320x50 banner at the top of the screen.
             bannerView = new BannerView(adUnitId, AdSize.SmartBanner,AdPosition.Bottom);
             bannerView.OnAdLoaded += (a, b) => isBannerLoaded = true;
@@ -172,14 +187,14 @@ namespace MJ.Ads
 #if UNITY_EDITOR
                 adUnitId = "unused";
 #elif UNITY_ANDROID
-        adUnitId = "ca-app-pub-1270408828484515/4504659513";
+        adUnitId = "ca-app-pub-1270408828484515/8410451177";
 #elif UNITY_IPHONE || UNITY_iOS
         adUnitId = "ca-app-pub-1270408828484515/9003459104";
 #else
         adUnitId = "unexpected_platform";
 #endif
             }
-            
+
 
             if (interstitialAd != null)
             {
@@ -205,44 +220,28 @@ namespace MJ.Ads
 
             IEnumerator ShowInterstitialRoutine(Action _OnFailed, Action _OnAdClosed)
             {
-                isClick = true;
-                Debug.Log(1);
-                RequestInterstitialAD();
-                Debug.Log(2);
-                onInterstitialFailed = _OnFailed;
-                Debug.Log(3);
-                onInterstitialClosed = _OnAdClosed;
-                Debug.Log(4);
+                isClick = true;     
+                RequestInterstitialAD();      
+                onInterstitialFailed = _OnFailed;      
+                onInterstitialClosed = _OnAdClosed;     
 
                 float timer = 0.5f;
                 while (timer > 0f)
                 {
                     timer -= Time.deltaTime;
-                    //if (isInterstitialLoadFailed)
-                    //{
-                    //    //???? ?????????? ?????????? ???? ????
-                    //    isClick = false;
-                    //    yield break;
-                    //}
-                    Debug.Log(5);
+                    
+                
                     if (interstitialAd.IsLoaded())
                     {
-                        Debug.Log(6);
                         interstitialAd.Show();
-                        Debug.Log(7);
                         RequestInterstitialAD();
-                        Debug.Log(8);
                         isClick = false;
-                        Debug.Log(9);
                         yield break;
                     }
                     yield return null;
                 }
-                Debug.Log(10);
                 onInterstitialFailed?.Invoke();
-                Debug.Log(11);
                 RequestInterstitialAD();
-                Debug.Log(12);
                 isClick = false;
             }
 
@@ -281,9 +280,9 @@ namespace MJ.Ads
 #if UNITY_EDITOR
                 adUnitId = "unused";
 #elif UNITY_ANDROID
-                adUnitId = "ca-app-pub-3800743713903940/5347944267";
+                adUnitId = GetRewardAdsID();
 #elif UNITY_IPHONE
-                adUnitId = "ca-app-pub-3800743713903940/5731087646";
+                adUnitId = GetRewardAdsID();
 #else
                 adUnitId = "unexpected_platform";
 #endif
@@ -342,7 +341,16 @@ namespace MJ.Ads
             }
         }
 
-
+        private string GetRewardAdsID()
+        {
+            int nextRewardIndex = UnityEngine.Random.Range(0, rewardAdsIds.Length);
+            while (nextRewardIndex == curRewardAdsIndex)
+            {
+                nextRewardIndex = UnityEngine.Random.Range(0, rewardAdsIds.Length);
+            }
+            curRewardAdsIndex = nextRewardIndex;
+            return rewardAdsIds[curRewardAdsIndex];
+        }
     }
 
 }
