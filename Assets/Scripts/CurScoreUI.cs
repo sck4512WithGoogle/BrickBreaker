@@ -6,16 +6,7 @@ using MJ.Manager;
 
 public class CurScoreUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI curScoreContentsText;
     [SerializeField] private TextMeshProUGUI scoreText;
-
-    private void Awake()
-    {
-        if(Application.systemLanguage != SystemLanguage.Korean)
-        {
-            curScoreContentsText.text = "Score : ";
-        }
-    }
 
     private void OnEnable()
     {

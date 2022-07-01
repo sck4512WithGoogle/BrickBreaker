@@ -13,6 +13,7 @@ public class CoroutineExecuter : MonoBehaviour
                 if (init == null)
                 {
                     init = new GameObject().AddComponent<Behaviour>();
+                    DontDestroyOnLoad(init.gameObject);
                 }
                 return init;
             }

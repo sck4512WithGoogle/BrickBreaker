@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
-  <string name="gcm_defaultSenderId" translatable="false">137257214277</string>
-  <string name="google_storage_bucket" translatable="false">breakblock-e8e94.appspot.com</string>
-  <string name="project_id" translatable="false">breakblock-e8e94</string>
-  <string name="google_api_key" translatable="false">AIzaSyBxe1CUjpdCkuTw7AJvdvh4CNgz4tMCQDQ</string>
-  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBxe1CUjpdCkuTw7AJvdvh4CNgz4tMCQDQ</string>
-  <string name="google_app_id" translatable="false">1:137257214277:android:9efc7ddf73c2d4eae91e2c</string>
-  <string name="default_web_client_id" translatable="false">137257214277-f19b6i9fbti9gsm8f16jm71ac7tcq7a5.apps.googleusercontent.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">946314515634</string>
+  <string name="google_storage_bucket" translatable="false">brickbreaker-7eaf2.appspot.com</string>
+  <string name="project_id" translatable="false">brickbreaker-7eaf2</string>
+  <string name="google_api_key" translatable="false">AIzaSyDGaXQtAjQKAmFGfNY3Af9RioxXMYR0Hx8</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDGaXQtAjQKAmFGfNY3Af9RioxXMYR0Hx8</string>
+  <string name="google_app_id" translatable="false">1:946314515634:android:186003cff07324171a25ab</string>
+  <string name="default_web_client_id" translatable="false">946314515634-9i18t6t3g85dlhmunnu09ea467br1mep.apps.googleusercontent.com</string>
 </resources>

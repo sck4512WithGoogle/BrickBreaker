@@ -6,6 +6,8 @@ using MJ.Data;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using MJ.Manager;
+using System;
+using MJ.Ads;
 
 public class PowerUpButtonUI : MonoBehaviour, IPointerClickHandler
 {
@@ -13,7 +15,10 @@ public class PowerUpButtonUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image image;
     [SerializeField] private Sprite onSprite;
     [SerializeField] private Sprite offSprite;
-
+    [SerializeField] private MessageBoxUI rewardAdsBoxUI;
+    [SerializeField] private MessageBoxUI messageBoxUI;
+    [SerializeField] private GameObject serverLoading;
+    [SerializeField] PlaySceneController playSceneController;
 
     private void OnEnable()
     {
@@ -37,15 +42,45 @@ public class PowerUpButtonUI : MonoBehaviour, IPointerClickHandler
 
         if (_Count == 0)
         {
-            image.raycastTarget = false;
             OptionManager.IsPowerUpItemOptionOn = false;
-            UpdatePowerUpOptionStatus();
+
+
+            var popupAction = new PopupAction();
+            Action openPopup = () => OpenRewardAdsItemPopup(popupAction.SetIsDoneTrue);
+            popupAction.OpenPopup = openPopup;
+            playSceneController.AddPopupAction(popupAction);
         }
-        else
+
+        UpdatePowerUpOptionStatus();
+    }
+
+    private void OpenRewardAdsItemPopup(Action _OnDie)
+    {
+        InputController.escInput.Disable();
+        rewardAdsBoxUI.gameObject.SetActive(true);
+        rewardAdsBoxUI.OnDie += _OnDie;
+
+        rewardAdsBoxUI.SetMessage($"power up item +{Constants.PowerUpItemCountMax}");
+        rewardAdsBoxUI.OkButton.onClick.AddListener(() =>
         {
-            image.raycastTarget = true;
-            UpdatePowerUpOptionStatus();
-        }
+            serverLoading.SetActive(true);
+            Action onFailed = () =>
+            {
+                //실패시 꺼줌
+                serverLoading.SetActive(false);
+                messageBoxUI.gameObject.SetActive(true);
+                messageBoxUI.SetMessage("failed to load ads", 73f);
+                messageBoxUI.SetButtonTextOK();
+            };
+            Action onSuccess = () =>
+            {
+                serverLoading.SetActive(false);
+                rewardAdsBoxUI.gameObject.SetActive(false);
+                OptionManager.IsPowerUpItemOptionOn = true; //있으니 옵션 켜줌
+                DataManager.PowerUpItemCount += Constants.PowerUpItemCountMax;
+            };
+            AdsManager.ShowRewardedAd(onFailed, onSuccess);
+        });
     }
 
     private void UpdatePowerUpOptionStatus()
@@ -55,6 +90,15 @@ public class PowerUpButtonUI : MonoBehaviour, IPointerClickHandler
  
     public void OnPointerClick(PointerEventData eventData)
     {
+        //아이템이 없는 경우
+        if (DataManager.PowerUpItemCount == 0)
+        {
+            OpenRewardAdsItemPopup(InputController.escInput.Enable);
+            return;
+        }
+
+
+
         OptionManager.IsPowerUpItemOptionOn = !OptionManager.IsPowerUpItemOptionOn;
         UpdatePowerUpOptionStatus();
     }

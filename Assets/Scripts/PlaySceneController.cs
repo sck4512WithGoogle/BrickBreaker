@@ -7,6 +7,19 @@ using MJ.Data;
 using MJ.Manager;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System;
+
+public class PopupAction
+{
+    public Action OpenPopup;
+
+    public void SetIsDoneTrue()
+    {
+        isDone = true;
+    }
+    public bool IsDone => isDone;
+    private bool isDone;
+}
 
 public class PlaySceneController : MonoBehaviour
 {
@@ -14,16 +27,26 @@ public class PlaySceneController : MonoBehaviour
     [SerializeField] private Collider2D gameOverTriggerCollider;
     [SerializeField] private GameObject resurrectPanel; //부활 사용할 건지 여부 UI패널
     [SerializeField] private GameObject pausePanel; //현재 퍼즈 켜져있는지 여부만 체크
+    [SerializeField] private MessageBoxUI messageBoxUI;
+
 
     [Header("아이템 버튼")]
     [SerializeField] private Image[] itemButtonImages;
     [SerializeField] private RectTransform[] itemButtonRects;
 
-
+    
     private float currentTimeScale;
     private bool isClick = false;
     private bool hasResurrected = false; //부활 사용했는지
+    private Queue<PopupAction> popupActions;
+    private bool hasInsertAction = false; //게임매니저에 델리게이트에 넣었는지 여부
 
+
+
+    private void Awake()
+    {
+        popupActions = new Queue<PopupAction>();
+    }
 
     private void OnEnable()
     {
@@ -39,6 +62,22 @@ public class PlaySceneController : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.OnStartShootBall += () =>
+        {
+            for (int i = 0; i < itemButtonImages.Length; i++)
+            {
+                itemButtonImages[i].raycastTarget = false;
+            }
+        };
+
+        GameManager.Instance.OnBlockCreateDone += () =>
+        {
+            for (int i = 0; i < itemButtonImages.Length; i++)
+            {
+                itemButtonImages[i].raycastTarget = true;
+            }
+        };
+
         StartCoroutine(ButtonUpRoutine());
     }
 
@@ -134,20 +173,38 @@ public class PlaySceneController : MonoBehaviour
             return;
         }
         isClick = true;
-
-        StartCoroutine(OnClickResurrectRoutine());
-        IEnumerator OnClickResurrectRoutine()
+        //입력 못 받게
+        InputController.escInput.Disable();
+        //로딩 켜줌
+        serverLoading.SetActive(true);
+   
+        Action onFailed = () =>
         {
-            bool isDone = false;
-            serverLoading.SetActive(true);
-            AdsManager.ShowRewardedAd(() => isDone = true, () => isDone = true);
-            yield return new WaitUntil(() => isDone);
+            isClick = false;
+            serverLoading.SetActive(false);
+
+            //실패하면 메시지 띄워줌
+            messageBoxUI.gameObject.SetActive(true);
+            messageBoxUI.SetButtonTextOK();
+            messageBoxUI.SetMessage("Failed to load ads.");
+        };
+        Action onSuccess = () =>
+        {
             isClick = false;
             serverLoading.SetActive(false);
             resurrectPanel.SetActive(false);
 
-            //부활 시킴
+            StartCoroutine(InvokeResurrectionEvent());
+        };
+        AdsManager.ShowRewardedAd(onFailed, onSuccess);
+
+        IEnumerator InvokeResurrectionEvent()
+        {
+            //잠깐 기다렸다가 부활 시킴
+            yield return YieldContainer.WaitForFixedUpdate;
             Resurrect();
+            //입력 받을 수 있게 해줌
+            InputController.escInput.Enable();
         }
     }
 
@@ -162,6 +219,8 @@ public class PlaySceneController : MonoBehaviour
         }
         else
         {
+            //입력 못 받게 해줌
+            InputController.escInput.Disable();
             //부활 안 했으면 이거 띄워줌
             resurrectPanel.SetActive(true);
         }
@@ -197,6 +256,57 @@ public class PlaySceneController : MonoBehaviour
         {
             SetTimeScale(0);
             pausePanel.SetActive(true);
+        }
+    }
+
+
+
+    public void AddPopupAction(PopupAction _PopupAction)
+    {
+        popupActions.Enqueue(_PopupAction);
+        if(hasInsertAction)
+        {
+            return;
+        }
+        else
+        {
+            GameManager.Instance.OnBlockCreateDone += AddPopupAction;
+            hasInsertAction = true;
+        }
+    }
+
+    private void AddPopupAction()
+    {
+        StartCoroutine(AddPopupActionRoutine());
+        IEnumerator AddPopupActionRoutine()
+        {
+            //시작할 때 못 누르게 함
+            for (int i = 0; i < itemButtonImages.Length; i++)
+            {
+                itemButtonImages[i].raycastTarget = false;
+            }
+            InputController.escInput.Disable();
+
+
+            while (popupActions.Count > 0)
+            {
+                var popupAction = popupActions.Dequeue();
+                popupAction.OpenPopup();
+                yield return new WaitUntil(() => popupAction.IsDone);
+                //약간 텀을 줌
+                yield return YieldContainer.GetWaitForSecondsRealtime(0.1f);
+            }
+
+
+            //누를 수 있게 해줌
+            for (int i = 0; i < itemButtonImages.Length; i++)
+            {
+                itemButtonImages[i].raycastTarget = true;
+            }
+            //다 끝나고 빼줌
+            GameManager.Instance.OnBlockCreateDone -= AddPopupAction;
+            InputController.escInput.Enable();
+            hasInsertAction = false;
         }
     }
 }

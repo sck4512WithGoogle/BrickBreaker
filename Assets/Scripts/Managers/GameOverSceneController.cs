@@ -12,16 +12,16 @@ public class GameOverSceneController : MonoBehaviour
 
     private void Start()
     {
-        if(Application.systemLanguage == SystemLanguage.Korean)
-        {
-            curScoreText.text = "현재점수 : ";
-            bestScoreText.text = "최고기록 : ";
-        }
-        else
-        {
-            curScoreText.text = "Score : ";
-            bestScoreText.text = "BestScore : ";
-        }
+        //if(Application.systemLanguage == SystemLanguage.Korean)
+        //{
+        //    curScoreText.text = "현재점수 : ";
+        //    bestScoreText.text = "최고기록 : ";
+        //}
+        //else
+        //{
+            curScoreText.text = "SCORE : ";
+            bestScoreText.text = "BEST SCORE : ";
+        //}
 
         curScoreText.text += ScoreManager.CurScore.ToString();
         bestScoreText.text += ScoreManager.BestScore.ToString();

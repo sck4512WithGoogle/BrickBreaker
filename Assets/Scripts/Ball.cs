@@ -25,6 +25,7 @@ public sealed class Ball : MonoBehaviour
     {
         IsMoving = true;
         rigidBody.AddForce(_Direction * ShootForce);
+        myCollider.enabled = false;
 
         CoroutineExecuter.ExcuteAfterWaitTime(() => myCollider.enabled = true, 0.03f);
     }

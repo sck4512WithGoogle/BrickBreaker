@@ -33,7 +33,7 @@ public class Movable : MonoBehaviour
         //myTransform.position = firstTargetPos;
 
 
-        while ((myTransform.position - targetPos).magnitude > 0.01f)
+        while ((myTransform.position - targetPos).magnitude > 0.03f)
         {
             myTransform.position = Vector3.Lerp(myTransform.position, targetPos, 0.2f);
             yield return null;

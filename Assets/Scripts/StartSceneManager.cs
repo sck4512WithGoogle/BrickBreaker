@@ -16,6 +16,8 @@ public class StartSceneManager : MonoBehaviour
     [SerializeField] private Graphic darkImage;
     [SerializeField] private GameObject logo;
     [SerializeField] private GameObject[] optionAndTutorialButtons;
+    [SerializeField] private Button[] mainButtons;
+
 
     private void Awake()
     {
@@ -56,6 +58,13 @@ public class StartSceneManager : MonoBehaviour
 
     public void OnClickStart()
     {
+        //입력 못 받게 하려고
+        for (int i = 0; i < mainButtons.Length; i++)
+        {
+            mainButtons[i].image.enabled = false;
+        }
+
+
         //이것도 꺼줌
         logo.SetActive(false);
         for (int i = 0; i < optionAndTutorialButtons.Length; i++)
@@ -70,6 +79,12 @@ public class StartSceneManager : MonoBehaviour
 
     public void OnClickContinue()
     {
+        //입력 못 받게 하려고
+        for (int i = 0; i < mainButtons.Length; i++)
+        {
+            mainButtons[i].image.enabled = false;
+        }
+
         //이것도 꺼줌
         logo.SetActive(false);
         for (int i = 0; i < optionAndTutorialButtons.Length; i++)

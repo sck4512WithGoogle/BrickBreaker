@@ -29,10 +29,13 @@ public sealed  class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI ballCountText;
 
-    
+    public event Action OnStartShootBall; //공 쏘기 시작
+    public event Action OnBlockCreateDone; //블럭이 다 만들어지고 난 후 실행되는 액션
+
+
     public static GameManager Instance => instance;
     private static GameManager instance;
-    private const float circleRaycaseRadius = 1.78f;
+    private const float circleRaycaseRadius = 1.3f;
 
     private int round;
     private Vector3 firstClickPos;
@@ -378,10 +381,16 @@ public sealed  class GameManager : MonoBehaviour
         ballShootInputListener.SetInputActive(true);
         //블럭 다 내려오고 저장해줌
         SaveData();
+
+
+        OnBlockCreateDone?.Invoke();
     }
 
     private IEnumerator ShootBalls()
     {
+        //공 쏠때 실행
+        OnStartShootBall?.Invoke();
+
         if (OptionManager.IsTwoBoundItemOptionOn)
         {
             --DataManager.TwoBoundItemCount;
@@ -405,7 +414,6 @@ public sealed  class GameManager : MonoBehaviour
             DataManager.BallDamage = 1;
             shootBallCount = currentBallCount;
         }
-   
 
         balls.Add(startBall);
         for (int i = 2; i <= shootBallCount; i++)
@@ -414,6 +422,13 @@ public sealed  class GameManager : MonoBehaviour
             ball.gameObject.SetActive(true);
             balls.Add(ball);
         }
+        //다 넣고 끔
+        for (int i = 1; i < balls.Count; i++)
+        {
+            balls[i].gameObject.SetActive(false);
+        }
+
+
 
         var startPos = startBall.transform.position;
 

@@ -116,6 +116,12 @@ namespace MJ.Ads
             CoroutineExecuter.Excute(ShowRewardedAdRoutine(_OnFailed));
             IEnumerator ShowRewardedAdRoutine(Action _OnFailed)
             {
+#if UNITY_EDITOR //테스트용
+                //yield return new WaitForSeconds(2f);
+                //_OnFailed.Invoke();
+                //yield break;
+#endif
+
                 if (!UnityAdsInitializer.IsUnityAdsOk)
                 {
                     _OnFailed?.Invoke();

@@ -7,6 +7,7 @@ using MJ.Ads;
 using Firebase.Auth;
 using System.Collections.Generic;
 
+
 public class IntroSceneController : MonoBehaviour
 {
     [SerializeField] private Image fadeImage;

@@ -84,4 +84,12 @@ public class IceBlock : Block
             Die();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D _Other)
+    {
+        if(_Other.CompareTag(Tags.GameOverTriggerTag))
+        {
+            Die();
+        }
+    }
 }

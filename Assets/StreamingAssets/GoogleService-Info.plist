@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>137257214277-i3p39hmabip0uek4bkifnh7vkhuehk5n.apps.googleusercontent.com</string>
+	<string>946314515634-762tv3bqm8g5ke74hhg8nrercga30d8d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.137257214277-i3p39hmabip0uek4bkifnh7vkhuehk5n</string>
+	<string>com.googleusercontent.apps.946314515634-762tv3bqm8g5ke74hhg8nrercga30d8d</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDdTvloZTfSy24e1iKQKwbou4qlJYlCL0A</string>
+	<string>AIzaSyAtNrIbzDTvlSxwIHpsq0Q4gV_octFlV58</string>
 	<key>GCM_SENDER_ID</key>
-	<string>137257214277</string>
+	<string>946314515634</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.studiobong.breakblock</string>
+	<string>com.studiobong.brickbreaker</string>
 	<key>PROJECT_ID</key>
-	<string>breakblock-e8e94</string>
+	<string>brickbreaker-7eaf2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>breakblock-e8e94.appspot.com</string>
+	<string>brickbreaker-7eaf2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:137257214277:ios:61a08387d1953ef3e91e2c</string>
+	<string>1:946314515634:ios:3e024436d7d1a5841a25ab</string>
 </dict>
 </plist>

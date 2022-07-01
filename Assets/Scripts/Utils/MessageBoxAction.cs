@@ -1,53 +1,39 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
-
+using MJ.Manager;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(RectTransform))]
 public class MessageBoxAction : MonoBehaviour
 {
     [SerializeField] private float biggingTime = 1f;
-    private RectTransform rectTransform;
     private Vector3 startScale;
+    private Transform myTransform;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-
-        startScale = rectTransform.localScale;
-        //images = GetComponentsInChildren<Image>();
+        myTransform = transform;
+        startScale = myTransform.localScale;
     }
 
     private void OnEnable()
     {
-        //rectTransform.localScale *= 0.01f;
-        ////ÄÃ·¯ ¾ËÆÄ°ª 0.3À¸·Î ³·Ãã
-        //for (int i = 0; i < images.Length; i++)
-        //{
-        //    var color = images[i].color;
-        //    color.a = 0.1f;
-        //    images[i].color = color;
-        //}
-
-        //StartCoroutine(BiggingEvent(biggingTime, 0.1f));
-
         StartCoroutine(DoSizeEffectRoutine());
     }
-
-
-   
+      
 
     private IEnumerator DoSizeEffectRoutine()
     {
-        var originPos = transform.localScale;
-        transform.localScale = new Vector3(originPos.x * 0.98f, originPos.y * 0.98f, 1f);
+        myTransform.localScale = startScale;
+
+
+        var originPos = myTransform.localScale;
+        myTransform.localScale = new Vector3(originPos.x * 0.98f, originPos.y * 0.98f, 1f);
         float time = 0f;
         while (time < 0.1f)
         {
             time += Time.fixedDeltaTime;
-            transform.localScale += Vector3.right * Time.fixedDeltaTime * 0.46f + Vector3.up * Time.fixedDeltaTime * 0.46f;
-            yield return new WaitForFixedUpdate();
+            myTransform.localScale += Vector3.right * Time.fixedDeltaTime * 0.46f + Vector3.up * Time.fixedDeltaTime * 0.46f;
+            yield return YieldContainer.GetWaitForSecondsRealtime(0.02f);
         }
 
 
@@ -55,9 +41,9 @@ public class MessageBoxAction : MonoBehaviour
         while (time < 0.03f)
         {
             time += Time.fixedDeltaTime;
-            transform.localScale += Vector3.left * Time.fixedDeltaTime * 0.7f + Vector3.down * Time.fixedDeltaTime * 0.7f;
-            yield return new WaitForFixedUpdate();
+            myTransform.localScale += Vector3.left * Time.fixedDeltaTime * 0.7f + Vector3.down * Time.fixedDeltaTime * 0.7f;
+            yield return YieldContainer.GetWaitForSecondsRealtime(0.02f);
         }
-        transform.localScale = originPos;
+        myTransform.localScale = originPos;
     }
 }

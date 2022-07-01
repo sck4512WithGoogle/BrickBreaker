@@ -6,16 +6,7 @@ using MJ.Manager;
 
 public class BestScoreUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI bestScoreTitleText;
     [SerializeField] private TextMeshProUGUI scoreText;
-
-    private void Awake()
-    {
-        if(Application.systemLanguage != SystemLanguage.Korean)
-        {
-            bestScoreTitleText.text = "Best score : ";
-        }
-    }
 
     private void OnEnable()
     {
