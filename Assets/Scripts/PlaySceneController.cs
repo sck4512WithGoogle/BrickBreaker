@@ -40,7 +40,7 @@ public class PlaySceneController : MonoBehaviour
     private bool hasResurrected = false; //부활 사용했는지
     private Queue<PopupAction> popupActions;
     private bool hasInsertAction = false; //게임매니저에 델리게이트에 넣었는지 여부
-
+    private bool hasClickedResurrection = false;
 
 
     private void Awake()
@@ -172,6 +172,7 @@ public class PlaySceneController : MonoBehaviour
         {
             return;
         }
+        hasClickedResurrection = true;
         isClick = true;
         //입력 못 받게
         InputController.escInput.Disable();
@@ -187,6 +188,8 @@ public class PlaySceneController : MonoBehaviour
             messageBoxUI.gameObject.SetActive(true);
             messageBoxUI.SetButtonTextOK();
             messageBoxUI.SetMessage("Failed to load ads.");
+
+            hasClickedResurrection = false;
         };
         Action onSuccess = () =>
         {
@@ -205,6 +208,7 @@ public class PlaySceneController : MonoBehaviour
             Resurrect();
             //입력 받을 수 있게 해줌
             InputController.escInput.Enable();
+            hasClickedResurrection = false;
         }
     }
 
@@ -251,8 +255,8 @@ public class PlaySceneController : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        //퍼즈 상태이면서 패널 꺼져있는 경우만
-        if(pause && !pausePanel.activeSelf)
+        //퍼즈 상태이면서 패널 꺼져있는 경우만, 광고 본 경우도 안 됨
+        if(pause && !pausePanel.activeSelf && !hasClickedResurrection)
         {
             SetTimeScale(0);
             pausePanel.SetActive(true);

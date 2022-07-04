@@ -125,16 +125,6 @@ public class StartSceneManager : MonoBehaviour
 
     public void OnClickReview()
     {
-        switch (DataManager.CurrentStoreType)
-        {
-            case StoreType.GooglePlayStore:
-                break;
-            case StoreType.OneStore:
-                break;
-            case StoreType.GalaxyStore:
-                break;
-            case StoreType.AppStore:
-                break;
-        }
+        Application.OpenURL(RemoteConfigData.StoreReviewURLs[DataManager.CurrentStoreType]);
     }
 }

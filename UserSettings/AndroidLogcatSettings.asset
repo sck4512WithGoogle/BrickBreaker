@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "292bd0e5923f7ece",
     "m_SelectedPackage": {
         "deviceId": "292bd0e5923f7ece",
-        "name": "com.studio_bong.breakblock",
-        "processId": 16949,
+        "name": "com.studio_bong.brickbreaker",
+        "processId": 3407,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -11,13 +11,43 @@
         {
             "deviceId": "292bd0e5923f7ece",
             "name": "com.sec.android.app.launcher",
-            "processId": 1642,
+            "processId": 1759,
             "exited": false
         },
         {
             "deviceId": "292bd0e5923f7ece",
-            "name": "com.studio_bong.breakblock",
-            "processId": 16949,
+            "name": "com.studio_bong.brickbreaker",
+            "processId": 16648,
+            "exited": true
+        },
+        {
+            "deviceId": "292bd0e5923f7ece",
+            "name": "com.android.vending",
+            "processId": 21518,
+            "exited": true
+        },
+        {
+            "deviceId": "292bd0e5923f7ece",
+            "name": "com.sec.android.app.myfiles",
+            "processId": 28673,
+            "exited": true
+        },
+        {
+            "deviceId": "292bd0e5923f7ece",
+            "name": "com.studio_bong.brickbreaker",
+            "processId": 946,
+            "exited": true
+        },
+        {
+            "deviceId": "292bd0e5923f7ece",
+            "name": "com.studio_bong.brickbreaker",
+            "processId": 7860,
+            "exited": true
+        },
+        {
+            "deviceId": "292bd0e5923f7ece",
+            "name": "com.studio_bong.brickbreaker",
+            "processId": 3407,
             "exited": false
         }
     ],

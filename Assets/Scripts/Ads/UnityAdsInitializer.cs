@@ -5,7 +5,7 @@ namespace MJ.Ads
     using UnityEngine;
     using UnityEngine.Advertisements;
 
-    public class UnityAdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
+    public class UnityAdsInitializer : IUnityAdsInitializationListener
     {
         private string gameID;
         public static bool IsUnityAdsOk => isUnityAdsOk;
@@ -13,7 +13,6 @@ namespace MJ.Ads
 
         public void InititalizeAds()
         {
-
 #if UNITY_EDITOR
             gameID = "4819405"; //그냥 안드로이드로 해줌
 #elif UNITY_ANDROID
@@ -23,13 +22,17 @@ namespace MJ.Ads
 #endif
             try
             {
+                Debug.Log("유니티 초기화1");
                 Advertisement.Initialize(gameID, AdsManager.IsTestMode, this);
+                Debug.Log("유니티 초기화2");
                 isUnityAdsOk = true;
+                Debug.Log("유니티 초기화3");
             }
             catch (System.Exception)
             {
                 isUnityAdsOk = false;
             }
+            isUnityAdsOk = false;
         }
 
 

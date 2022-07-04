@@ -19,13 +19,14 @@ namespace MJ.Ads
         private Action onRewardedClosed;
 
         private Action onBannerLoadFailed;
-      
 
-        private bool isClick = false;
 
         private bool isBannerShow = false; //배너 광고 현재 나왔는지 여부 체크
         private bool isBannerLoaded = false;
 
+
+        private bool isInterstitialAdsLoaded = false;
+        private bool isRewardAdsLoaded = false;
 
         private string[] rewardAdsIds;
         private int curRewardAdsIndex;
@@ -83,8 +84,8 @@ namespace MJ.Ads
             MobileAds.Initialize(HandleInitCompleteAction);
 
 
-            //RequestInterstitialAD();
-            //RequestRewardedAD();
+            RequestInterstitialAD();
+            RequestRewardedAD();
         }
 
         private void HandleInitCompleteAction(InitializationStatus initstatus)
@@ -168,6 +169,8 @@ namespace MJ.Ads
 
         private void RequestInterstitialAD()
         {
+            isInterstitialAdsLoaded = false;
+
             string adUnitId = string.Empty;
             if (AdsManager.IsTestMode)
             {
@@ -201,6 +204,7 @@ namespace MJ.Ads
             }
            
             interstitialAd = new InterstitialAd(adUnitId);
+            interstitialAd.OnAdLoaded += (a, b) => isInterstitialAdsLoaded = true;
             //interstitialAd.OnAdFailedToLoad += (a, b) => { isInterstitialLoadFailed = true; };
             //interstitialAd.OnAdFailedToShow += (a, b) => { _OnFailed?.Invoke(); };
             interstitialAd.OnAdClosed += (a, b) => onInterstitialClosed?.Invoke();
@@ -208,23 +212,20 @@ namespace MJ.Ads
             interstitialAd.LoadAd(request);
         }
         public void ShowInterstitialAd(Action _OnFailed, Action _OnAdClosed)
-        {
-            if (isClick)
-            {
-                return;
-            }
-
-  
+        { 
             CoroutineExecuter.Excute(ShowInterstitialRoutine(_OnFailed, _OnAdClosed));
 
             IEnumerator ShowInterstitialRoutine(Action _OnFailed, Action _OnAdClosed)
             {
-                isClick = true;     
-                RequestInterstitialAD();      
-                onInterstitialFailed = _OnFailed;      
-                onInterstitialClosed = _OnAdClosed;     
+                if (!isInterstitialAdsLoaded)
+                {
+                    RequestInterstitialAD();
+                }
 
-                float timer = 0.5f;
+                onInterstitialFailed = _OnFailed;
+                onInterstitialClosed = _OnAdClosed;
+
+                float timer = 1.5f;
                 while (timer > 0f)
                 {
                     timer -= Time.deltaTime;
@@ -234,14 +235,12 @@ namespace MJ.Ads
                     {
                         interstitialAd.Show();
                         RequestInterstitialAD();
-                        isClick = false;
                         yield break;
                     }
                     yield return null;
                 }
-                onInterstitialFailed?.Invoke();
                 RequestInterstitialAD();
-                isClick = false;
+                onInterstitialFailed?.Invoke();
             }
 
         }
@@ -261,6 +260,7 @@ namespace MJ.Ads
 
         public void RequestRewardedAD()
         {
+            isRewardAdsLoaded = false;
             string adUnitId = string.Empty;
             if (AdsManager.IsTestMode)
             {
@@ -296,23 +296,20 @@ namespace MJ.Ads
 
             rewardedAd = new RewardedAd(adUnitId);
             rewardedAd.OnAdClosed += (a, b) => onRewardedClosed?.Invoke();
-
+            rewardedAd.OnAdLoaded += (a, b) => isRewardAdsLoaded = true;
             AdRequest request = new AdRequest.Builder().AddKeyword("unity-admob-sample").Build();
             rewardedAd.LoadAd(request);
         }
         public void ShowRewardedAd(Action _OnFailed, Action _OnAdClosed)
         {
-            if (isClick)
-            {
-                return;
-            }
-
-            RequestRewardedAD();
             CoroutineExecuter.Excute(ShowRewardedRoutine(_OnFailed, _OnAdClosed));
 
             IEnumerator ShowRewardedRoutine(Action _OnFailed, Action _OnAdClosed)
             {
-                isClick = true;
+                if (!isRewardAdsLoaded)
+                {
+                    RequestRewardedAD();
+                }
 
                 onRewardedFailed = _OnFailed;
                 onRewardedClosed = _OnAdClosed;
@@ -320,7 +317,7 @@ namespace MJ.Ads
                 //isInterstitialLoadFailed = false;
                 //RequestInterstitialAD();
 
-                float timer = 0.5f;
+                float timer = 1.5f;
                 while (timer > 0f)
                 {
                     timer -= Time.deltaTime;
@@ -329,14 +326,12 @@ namespace MJ.Ads
                     {
                         rewardedAd.Show();
                         RequestRewardedAD();
-                        isClick = false;
                         yield break;
                     }
                     yield return null;
                 }
                 onRewardedFailed?.Invoke();
                 RequestRewardedAD();
-                isClick = false;
             }
         }
 

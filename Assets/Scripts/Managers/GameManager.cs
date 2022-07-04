@@ -173,6 +173,8 @@ public sealed  class GameManager : MonoBehaviour
             startBall.transform.position = totalBallPos;
             currentBallCount = playData.ballCount;
             round = playData.round;
+            ScoreManager.AddScore(playData.score);
+
 
             var commonBlockData = playData.commonBlockData;
             for (int i = 0; i < commonBlockData.Length; i++)
@@ -501,6 +503,7 @@ public sealed  class GameManager : MonoBehaviour
         playMapData.ballCount = currentBallCount;
         playMapData.totalBallPos = totalBallPos;
         playMapData.round = round;
+        playMapData.score = ScoreManager.CurScore;
 
         List<CommonBlockData> commonBlocksData = new List<CommonBlockData>();
         foreach (var commonBlock in commonBlocks)

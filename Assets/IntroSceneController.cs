@@ -4,9 +4,10 @@ using UnityEngine.UI;
 using MJ.Manager;
 using MJ.Data;
 using MJ.Ads;
-using Firebase.Auth;
-using System.Collections.Generic;
 
+#if !UNITY_EDITOR
+using Firebase.Auth;
+#endif
 
 public class IntroSceneController : MonoBehaviour
 {
@@ -17,18 +18,19 @@ public class IntroSceneController : MonoBehaviour
 #if UNITY_EDITOR
         PlayerPrefs.DeleteAll();
 #endif
-        Application.targetFrameRate = 60;
 
         //데이터
         DataManager.Init();
-
         //옵션
         OptionManager.Init();
-
         //광고
         AdsManager.Init();
+        //리모트 컨피그 데이터 불러옴
+        RemoteConfigData.LoadData();
 
 #if !UNITY_EDITOR
+        Application.targetFrameRate = 60;
+
         var firebaseAuth = FirebaseAuth.DefaultInstance;
         firebaseAuth.SignInAnonymouslyAsync();
 #endif
@@ -45,6 +47,7 @@ public class IntroSceneController : MonoBehaviour
         float speed = Constants.fadeSpeed;
         fadeImage.gameObject.SetActive(true);
 
+
         while (fadeImage.color.a > 0f)
         {
             var color = fadeImage.color;
@@ -57,7 +60,6 @@ public class IntroSceneController : MonoBehaviour
 
 
         AdsManager.ShowBannerAd();
-
         //이후 씬이동
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MainSceneName);
     }
