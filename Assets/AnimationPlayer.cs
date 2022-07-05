@@ -15,12 +15,12 @@ public class AnimationPlayer : MonoBehaviour
     }
     private IEnumerator PlayAnimation()
     {
-        var waitForSecondsRealTime = new WaitForSecondsRealtime(keyFrame);
         for (int i = 0; i < atlas.spriteCount; i++)
         {
             spriteRenderer.sprite = atlas.GetSprite(i.ToString());
-            yield return waitForSecondsRealTime;
+            yield return new WaitForSecondsRealtime(keyFrame);
         }
+
 
         spriteRenderer.sprite = null;
     }

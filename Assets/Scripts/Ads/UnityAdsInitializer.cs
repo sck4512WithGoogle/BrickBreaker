@@ -8,8 +8,8 @@ namespace MJ.Ads
     public class UnityAdsInitializer : IUnityAdsInitializationListener
     {
         private string gameID;
-        public static bool IsUnityAdsOk => isUnityAdsOk;
-        private static bool isUnityAdsOk = false;
+        public static bool IsUnityAdsOk { get; private set; } = false;
+ 
 
         public void InititalizeAds()
         {
@@ -22,17 +22,13 @@ namespace MJ.Ads
 #endif
             try
             {
-                Debug.Log("유니티 초기화1");
                 Advertisement.Initialize(gameID, AdsManager.IsTestMode, this);
-                Debug.Log("유니티 초기화2");
-                isUnityAdsOk = true;
-                Debug.Log("유니티 초기화3");
+                IsUnityAdsOk = true;
             }
             catch (System.Exception)
             {
-                isUnityAdsOk = false;
+                IsUnityAdsOk = false;
             }
-            isUnityAdsOk = false;
         }
 
 

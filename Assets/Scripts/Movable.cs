@@ -22,15 +22,11 @@ public class Movable : MonoBehaviour
         //yield return MJ.Manager.YieldContainer.GetWaitSeconds(0.2f);
         Vector3 targetPos = myTransform.position + new Vector3(0, -Constants.BlockColumnSize, 0);
 
-        //ÀÏ´Ü ¾ø¾Öº½
-
-        //var firstTargetPos = targetPos + Vector3.up * -3f;
-        //while ((myTransform.position - firstTargetPos).magnitude > 0.1f)
-        //{
-        //    myTransform.position = Vector3.Lerp(myTransform.position, firstTargetPos, 0.2f);
-        //    yield return null;
-        //}
-        //myTransform.position = firstTargetPos;
+#if UNITY_EDITOR
+        float t = 0.08f;
+#else
+        float t = 0.2f;
+#endif
 
 
         while ((myTransform.position - targetPos).magnitude > 0.03f)

@@ -81,8 +81,7 @@ namespace MJ.Ads
                     _OnFailed?.Invoke();
                     yield break;
                 }
-
-
+   
 
                 //제일 먼저 유니티 광고 자체 초기화 체크
                 if (!Advertisement.isInitialized)
@@ -93,7 +92,7 @@ namespace MJ.Ads
                 isLoaded = false;
                 Advertisement.Load(interstitialAdsID, this);
 
-                float waitTime = 1f;
+                float waitTime = 1.5f;
                 while (waitTime > 0f)
                 {
                     waitTime -= Time.deltaTime;

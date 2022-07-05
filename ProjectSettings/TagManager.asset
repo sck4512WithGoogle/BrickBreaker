@@ -6,12 +6,12 @@ TagManager:
   tags:
   - Ball
   - Bottom
-  - GreenOrb
   - GameOverTrigger
   - Block
   - LeftWall
   - RightWall
   - TopWall
+  - IceBlock
   layers:
   - Default
   - TransparentFX

@@ -35,7 +35,7 @@ public sealed  class GameManager : MonoBehaviour
 
     public static GameManager Instance => instance;
     private static GameManager instance;
-    private const float circleRaycaseRadius = 1.3f;
+    private const float circleRaycaseRadius = 1.35f;  
 
     private int round;
     private Vector3 firstClickPos;
@@ -315,18 +315,17 @@ public sealed  class GameManager : MonoBehaviour
                 spawnPoses.RemoveAt(rand);
             }
 
-            var iceBlock = PoolManager.GetIceBlock();
-            iceBlock.gameObject.SetActive(true);
-            iceBlock.transform.position = spawnPoses[Random.Range(0, spawnPoses.Count)];
-            iceBlock.OnCreateBlock();
-            if (!iceBlocks.Contains(iceBlock))
+            if (Constants.MaxRound > round)
             {
-                iceBlocks.Add(iceBlock);
-            }
-            //나중에 넣어줌
-            blocks.Add(iceBlock);
-            moves.Add(iceBlock);
+                var iceBlock = PoolManager.GetIceBlock();
+                iceBlock.gameObject.SetActive(true);
+                iceBlock.transform.position = spawnPoses[Random.Range(0, spawnPoses.Count)];
+                iceBlock.OnCreateBlock();
 
+                iceBlocks.Add(iceBlock);
+                blocks.Add(iceBlock);
+                moves.Add(iceBlock);
+            }
 
             Func<bool> check = () =>
             {
@@ -340,7 +339,7 @@ public sealed  class GameManager : MonoBehaviour
                 return true;
             };
             yield return new WaitUntil(check); //다 내려올때까지 기다림
-
+     
             //블럭들 내려줌
             foreach (var movableObj in moves)
             {

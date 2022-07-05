@@ -97,7 +97,7 @@ public class PlaySceneController : MonoBehaviour
             itemButtonRects[i].anchoredPosition -= Vector2.up * moveLength;
         }
 
-        float speed = 200f;
+        float speed = 250f;
         while (moveLength > 0f)
         {
             float moveAmount = Time.deltaTime * speed;
@@ -204,7 +204,7 @@ public class PlaySceneController : MonoBehaviour
         IEnumerator InvokeResurrectionEvent()
         {
             //잠깐 기다렸다가 부활 시킴
-            yield return YieldContainer.WaitForFixedUpdate;
+            yield return YieldContainer.GetWaitForSeconds(0.1f);
             Resurrect();
             //입력 받을 수 있게 해줌
             InputController.escInput.Enable();
