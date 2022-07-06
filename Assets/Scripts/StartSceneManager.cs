@@ -18,17 +18,9 @@ public class StartSceneManager : MonoBehaviour
     [SerializeField] private GameObject[] optionAndTutorialButtons;
     [SerializeField] private Button[] mainButtons;
 
-
-    private void Awake()
-    {
-#if UNITY_EDITOR
-        //PlayerPrefs.DeleteAll();
-#endif
-                      
-
-        //AdsManager.ShowBannerAd();
-    }
-
+    [Header("PopUps")]
+    [SerializeField] private GameObject optionPopup;
+    [SerializeField] private GameObject tutorialPopup;
 
     private void OnEnable()
     {
@@ -52,6 +44,18 @@ public class StartSceneManager : MonoBehaviour
    
     private void OnESCPerform(InputAction.CallbackContext _CallbackContext)
     {
+        if(optionPopup.activeSelf)
+        {
+            optionPopup.SetActive(false);
+            return;
+        }
+
+        if(tutorialPopup.activeSelf)
+        {
+            tutorialPopup.SetActive(false);
+            return;
+        }
+
         Application.Quit();
     }
 

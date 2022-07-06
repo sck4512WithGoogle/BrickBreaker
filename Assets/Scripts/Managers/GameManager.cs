@@ -48,7 +48,7 @@ public sealed  class GameManager : MonoBehaviour
 
     private List<Ball> balls;
     private HashSet<CommonBlock> commonBlocks;
-    private HashSet<IceBlock> iceBlocks;
+    private HashSet<MagicBlock> iceBlocks;
     private HashSet<Movable> moves;
 
     private int currentBallCount;
@@ -64,17 +64,16 @@ public sealed  class GameManager : MonoBehaviour
 
         totalBallPos = new Vector3(0f, Constants.BottomY, 0f);
         balls = new List<Ball>();
-        //balls.Add(startBall);
-
+       
         commonBlocks = new HashSet<CommonBlock>();
-        iceBlocks = new HashSet<IceBlock>();
+        iceBlocks = new HashSet<MagicBlock>();
         moves = new HashSet<Movable>();
     }
 
     private void OnDisable()
     {
         //게임 끝나면 끔
-        IceBlock.StopChangeTimePeriod();    
+        MagicBlock.StopChangeTimePeriod();    
     }
 
     private void Start()
@@ -206,7 +205,7 @@ public sealed  class GameManager : MonoBehaviour
             }
             CoroutineExecuter.ExcuteAfterWaitTime(() => 
             {
-                IceBlock.ChangeTimePeriod();
+                MagicBlock.ChangeTimePeriod();
                 ballShootInputListener.SetInputActive(true);
             }, 0.7f);
         }
@@ -216,7 +215,7 @@ public sealed  class GameManager : MonoBehaviour
             CoroutineExecuter.ExcuteAfterWaitTime(() => 
             {
                 CreateBlocks();
-                IceBlock.ChangeTimePeriod();
+                MagicBlock.ChangeTimePeriod();
             }, 0.7f);
         }
 
@@ -270,24 +269,8 @@ public sealed  class GameManager : MonoBehaviour
         StartCoroutine(CreateBlocksRoutine());
         IEnumerator CreateBlocksRoutine()
         {
-            int count;
-            int randBlock = Random.Range(0, 24);
-            if (round <= 10)
-            {
-                count = randBlock < 16 ? 1 : 2;
-            }
-            else if (round <= 20)
-            {
-                count = randBlock < 8 ? 1 : (randBlock < 6 ? 2 : 3);
-            }
-            else if (round <= 40)
-            {
-                count = randBlock < 9 ? 2 : (randBlock < 18 ? 3 : 4);
-            }
-            else
-            {
-                count = randBlock < 8 ? 2 : randBlock < 16 ? 3 : (randBlock < 20 ? 4 : 5);
-            }
+            int count = MJ.MyUtil.GetBlockCount(round);            
+           
 
             List<Vector3> spawnPoses = new List<Vector3>();
             for (int i = 0; i < spawnTransforms.Length; i++)
@@ -463,13 +446,29 @@ public sealed  class GameManager : MonoBehaviour
         };
         yield return new WaitUntil(checkBalls);
         Time.timeScale = 1f;
+
         ++round;
+        if(round > Constants.MaxRound)
+        {
+            //최대 이거 못 넘음
+            round = Constants.MaxRound;
+        }
+
+
         //첫 번째 빼고 전부 다 끔
         for (int i = 1; i < balls.Count; i++)
         {
             balls[i].gameObject.SetActive(false);
         }
         balls.Clear();
+
+        //혹시나 캐싱 안 된 경우 이걸로 해줌
+        if (totalBallPos == Vector3.zero)
+        {
+            totalBallPos = startBall.transform.position;
+        }
+
+
         //다 끝나고 여기 부분
         CreateBlocks();
     }

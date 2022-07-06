@@ -32,7 +32,8 @@ public class PlaySceneController : MonoBehaviour
 
     [Header("아이템 버튼")]
     [SerializeField] private Image[] itemButtonImages;
-    [SerializeField] private RectTransform[] itemButtonRects;
+    [SerializeField] private RectTransform itemButtonsParentRect;
+    //[SerializeField] private RectTransform[] itemButtonRects;
 
     
     private float currentTimeScale;
@@ -89,29 +90,23 @@ public class PlaySceneController : MonoBehaviour
         }
 
 
-        Vector2[] startPoses = new Vector2[itemButtonRects.Length];
+        Vector2 startPos = itemButtonsParentRect.anchoredPosition;
         float moveLength = 200f;
-        for (int i = 0; i < itemButtonRects.Length; i++)
-        {
-            startPoses[i] = itemButtonRects[i].anchoredPosition;
-            itemButtonRects[i].anchoredPosition -= Vector2.up * moveLength;
-        }
+        itemButtonsParentRect.anchoredPosition -= Vector2.up * moveLength;
 
         float speed = 250f;
         while (moveLength > 0f)
         {
             float moveAmount = Time.deltaTime * speed;
-            for (int i = 0; i < itemButtonRects.Length; i++)
-            {
-                itemButtonRects[i].anchoredPosition += Vector2.up * moveAmount;
-            }
+            itemButtonsParentRect.anchoredPosition += Vector2.up * moveAmount;
+                       
             moveLength -= moveAmount;
             yield return null;
         }
 
+        itemButtonsParentRect.anchoredPosition = startPos;
         for (int i = 0; i < itemButtonImages.Length; i++)
         {
-            itemButtonRects[i].anchoredPosition = startPoses[i];
             itemButtonImages[i].raycastTarget = true;
         }
     }
@@ -204,7 +199,11 @@ public class PlaySceneController : MonoBehaviour
         IEnumerator InvokeResurrectionEvent()
         {
             //잠깐 기다렸다가 부활 시킴
+#if UNITY_EDITOR
             yield return YieldContainer.GetWaitForSeconds(0.1f);
+#else
+            yield return YieldContainer.WaitForFixedUpdate;
+#endif
             Resurrect();
             //입력 받을 수 있게 해줌
             InputController.escInput.Enable();

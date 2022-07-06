@@ -15,7 +15,7 @@ namespace MJ.Manager
         private static GameObject ballPrefab;
 
         private static List<CommonBlock> blocks;
-        private static List<IceBlock> iceBlocks;
+        private static List<MagicBlock> iceBlocks;
         private static List<Ball> balls;
 
 
@@ -29,13 +29,21 @@ namespace MJ.Manager
         private static List<GameObject> iceBlockBreakEffects;
 
 
+
+        private static GameObject speakerPrefab;
+        private static List<AudioSource> speakers;
+
+
+        private static GameObject numberTextPrefab;
+        private static List<NumberText> numberTexts;
+
         static PoolManager()
         {
             blockPrefab = Resources.Load<GameObject>("Prefabs/Block");
             blocks = new List<CommonBlock>();
 
             iceBlockPrefab = Resources.Load<GameObject>("Prefabs/IceBlock");
-            iceBlocks = new List<IceBlock>();
+            iceBlocks = new List<MagicBlock>();
 
             ballPrefab = Resources.Load<GameObject>("Prefabs/Ball");
             balls = new List<Ball>();
@@ -54,7 +62,17 @@ namespace MJ.Manager
             iceBlockBreakEffectPrefab = Resources.Load<GameObject>("Prefabs/IceBlockBreakEffect");
             blockBreakEffects = new List<GameObject>();
             iceBlockBreakEffects = new List<GameObject>();
+
+
+            speakerPrefab = Resources.Load<GameObject>("Prefabs/Speaker");
+            speakers = new List<AudioSource>();
+
+
+
+            numberTextPrefab = Resources.Load<GameObject>("Prefabs/NumberText");
+            numberTexts = new List<NumberText>();
         }
+
         public static void Init()
         {
             balls.Clear();
@@ -67,6 +85,50 @@ namespace MJ.Manager
             {
                 numbers[i].Clear();
             }
+
+            speakers.Clear();
+            //4°³ ¸¸µé¾îµÒ
+            for (int i = 0; i < 4; i++)
+            {
+                var newSpeaker = Instantiate(speakerPrefab).GetComponent<AudioSource>();
+                newSpeaker.playOnAwake = false;
+                newSpeaker.loop = false;
+                speakers.Add(newSpeaker);
+            }
+
+            numberTexts.Clear();
+        }
+
+        public static NumberText GetNumberText()
+        {
+            foreach (var numberText in numberTexts)
+            {
+                if(!numberText.gameObject.activeSelf)
+                {
+                    return numberText;
+                }
+            }
+            var newNumberText = Instantiate(numberTextPrefab).GetComponent<NumberText>();
+            numberTexts.Add(newNumberText);
+            return newNumberText;
+        }
+
+
+        public static AudioSource GetSpeaker()
+        {
+            foreach (var speaker in speakers)
+            {
+                if(!speaker.isPlaying)
+                {
+                    return speaker;
+                }
+            }
+
+            var newSpeaker = Instantiate(speakerPrefab).GetComponent<AudioSource>();
+            newSpeaker.playOnAwake = false;
+            newSpeaker.loop = false;
+            speakers.Add(newSpeaker);
+            return newSpeaker;
         }
 
         public static CommonBlock GetCommonBlock()
@@ -100,7 +162,7 @@ namespace MJ.Manager
         }
 
 
-        public static IceBlock GetIceBlock()
+        public static MagicBlock GetIceBlock()
         {
             foreach (var iceBlock in iceBlocks)
             {
@@ -110,7 +172,7 @@ namespace MJ.Manager
                 }
             }
 
-            var iceBlockObj = Instantiate(iceBlockPrefab).GetComponent<IceBlock>();
+            var iceBlockObj = Instantiate(iceBlockPrefab).GetComponent<MagicBlock>();
             iceBlocks.Add(iceBlockObj);
             return iceBlockObj;
         }

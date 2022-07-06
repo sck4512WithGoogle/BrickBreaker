@@ -2,11 +2,14 @@ using UnityEngine;
 using MJ.Manager;
 public sealed class SoundCaching : MonoBehaviour
 {
-    [SerializeField] private AudioSource[] blockSounds;
-    [SerializeField] private AudioSource[] greenOrbSounds;
+    [SerializeField] private AudioClip blockTouchSound;
+    [SerializeField] private AudioClip blockDestroySound;
+    [SerializeField] private AudioClip magicBlockDestroySound;
+    [SerializeField] private AudioClip addBallSound;
+
 
     private void Awake()
     {
-        SoundManager.Init(blockSounds, greenOrbSounds);
+        GameSoundManager.Init(blockTouchSound, blockDestroySound, magicBlockDestroySound, addBallSound);
     }
 }

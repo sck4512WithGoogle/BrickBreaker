@@ -30,6 +30,12 @@ public class TwoBoundButtonUI : MonoBehaviour, IPointerClickHandler
 
     private void Start()
     {
+        //만약 옵션에서 에임 꺼졌으면 이거 끔
+        if(!OptionManager.IsAiming)
+        {
+            OptionManager.IsTwoBoundItemOptionOn = false;
+        }
+
         OnTwoBoundItemCountChange(DataManager.TwoBoundItemCount);
     }
 
@@ -40,8 +46,6 @@ public class TwoBoundButtonUI : MonoBehaviour, IPointerClickHandler
         if (_Count == 0)
         {
             OptionManager.IsTwoBoundItemOptionOn = false;
-
-
 
             var popupAction = new PopupAction();
             Action openPopup = () => OpenRewardAdsItemPopup(popupAction.SetIsDoneTrue);
@@ -94,9 +98,13 @@ public class TwoBoundButtonUI : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-
-
         OptionManager.IsTwoBoundItemOptionOn = !OptionManager.IsTwoBoundItemOptionOn;
+        if(OptionManager.IsTwoBoundItemOptionOn)
+        {
+            //옵션 킨거면 이것도 켜줌
+            OptionManager.SetAimingOption(true);
+        }
+
         UpdateTwoBoundOptionStatus();
     }
 }

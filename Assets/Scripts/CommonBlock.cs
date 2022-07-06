@@ -60,11 +60,11 @@ public class CommonBlock : Block
 
 
 
-        SoundManager.PlayBlockSound();
 
 
         if (count > 0)
         {
+            GameSoundManager.PlayBlockTouchSound(0.8f);
             //ScoreManager.AddScore(1);
             RenderNumber(count);
         }
@@ -85,6 +85,10 @@ public class CommonBlock : Block
         }
         numbersParent.DetachChildren();
         numbers = new GameObject[0];
+
+        //¼Ò¸®³¿
+        GameSoundManager.PlayBlockDestroySound(0.7f);
+
 
         ScoreManager.AddScore(disableScore);
         gameObject.SetActive(false);
