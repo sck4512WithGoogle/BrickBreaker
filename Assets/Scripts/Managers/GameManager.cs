@@ -81,6 +81,9 @@ public sealed  class GameManager : MonoBehaviour
         ballShootInputListener.OnBeginDragAction += _Position =>
         {
             firstClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
+           
+            
+
             shootDirectionLength = 0f;
 
             arrowTransform.gameObject.SetActive(true);
@@ -92,6 +95,9 @@ public sealed  class GameManager : MonoBehaviour
         ballShootInputListener.OnDragAction += _Position =>
         {
             secondClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
+            
+
+
 
             shootDirection = secondClickPos - firstClickPos;
             shootDirectionLength = shootDirection.magnitude;

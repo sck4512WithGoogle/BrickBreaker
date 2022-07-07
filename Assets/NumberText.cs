@@ -42,7 +42,7 @@ public class NumberText : MonoBehaviour
             myTransform.position += Vector3.up * Time.fixedDeltaTime * 4f;
 
             var color = text.color;
-            color.a -= Time.fixedDeltaTime * 0.4f;
+            color.a -= Time.fixedDeltaTime * 0.6f;
             text.color = color;
             yield return waitForFixed;
         }
