@@ -73,7 +73,7 @@ public class MagicBlock : Block
         iceBlockBreakEffect.transform.position = transform.position;
         iceBlockBreakEffect.SetActive(true);
 
-        GameSoundManager.PlayMagicBlockDestroySound(0.8f);
+        GameSoundManager.PlayMagicBlockDestroySound(0.6f);
 
         var numberText = PoolManager.GetNumberText();
         numberText.gameObject.SetActive(true);
@@ -82,7 +82,7 @@ public class MagicBlock : Block
         numberText.MoveUp(() => 
         {
             //위로가서
-            GameSoundManager.PlayAddBallSound(0.7f);
+            GameSoundManager.PlayAddBallSound(0.5f);
             GameManager.Instance.AddBall();
         });
 

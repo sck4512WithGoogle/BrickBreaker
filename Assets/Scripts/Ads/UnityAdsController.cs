@@ -61,9 +61,9 @@ namespace MJ.Ads
                 }
 
                 yield return new WaitUntil(() => Advertisement.isInitialized && Advertisement.isSupported);
+                Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
                 Advertisement.Banner.Load(bannerAdsID);
                 yield return new WaitUntil(() => Advertisement.Banner.isLoaded);
-                Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
                 Advertisement.Banner.Show(bannerAdsID);
             }
         }

@@ -37,6 +37,10 @@ namespace MJ.Ads
 
         public static void ShowBannerAd()
         {
+#if UNITY_EDITOR
+            unityAdsController.ShowBannerAd();
+            return;
+#endif
             googleAdmobController.ShowBanner(unityAdsController.ShowBannerAd);
         }
 

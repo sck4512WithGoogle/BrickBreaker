@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 public class CommonBlock : Block
 {
+    [Header("NumberRender")]
+    [SerializeField] private Transform pos_1;
+    [SerializeField] private Transform[] poses_2;
+    [SerializeField] private Transform[] poses_3;
+    [SerializeField] private Transform[] poses_4;
+
+    [Header("SpriteRenderer")]
     [SerializeField] private SpriteRenderer secondBlockSpriteRenderer;
-    [SerializeField] private Transform numbersParent;
-    //[SerializeField] private Sprite takeDamageSprite;
-    private static readonly float horizontalSize_4 = -94.3f;
-    private static readonly float horizontalSize_3 = -95.5f;
-    private static readonly float horizontalSize_2 = -96.8f;
     private static readonly int damageCountMax = 7; //0, 1, 2, 3, 4, 5, 6, 7 Á¾·ù
 
 
@@ -25,12 +27,12 @@ public class CommonBlock : Block
 
     private int disableScore;
     private GameObject[] numbers;
-    private HorizontalLayoutGroup numberHorizontal;
+    //private HorizontalLayoutGroup numberHorizontal;
     protected override void Awake()
     {
         base.Awake();
         numbers = new GameObject[0];
-        numberHorizontal = numbersParent.GetComponent<HorizontalLayoutGroup>();
+        //numberHorizontal = numbersParent.GetComponent<HorizontalLayoutGroup>();
     }
 
 
@@ -61,10 +63,9 @@ public class CommonBlock : Block
 
 
 
-
         if (count > 0)
         {
-            GameSoundManager.PlayBlockTouchSound(0.8f);
+            GameSoundManager.PlayBlockTouchSound(0.6f);
             //ScoreManager.AddScore(1);
             RenderNumber(count);
         }
@@ -83,11 +84,11 @@ public class CommonBlock : Block
         {
             numbers[i].SetActive(false);
         }
-        numbersParent.DetachChildren();
+        //numbersParent.DetachChildren();
         numbers = new GameObject[0];
 
         //¼Ò¸®³¿
-        GameSoundManager.PlayBlockDestroySound(0.7f);
+        GameSoundManager.PlayBlockDestroySound(0.6f);
 
 
         ScoreManager.AddScore(disableScore);
@@ -96,26 +97,35 @@ public class CommonBlock : Block
 
     private void RenderNumber(int _Number)
     {
-        //numberText.text = leftTouchCount.ToString();
         string temp = _Number.ToString();
 
         for (int i = 0; i < numbers.Length; i++)
         {
             numbers[i].SetActive(false);
+            numbers[i].transform.SetParent(null);
         }
-        numbersParent.DetachChildren();
+  
         numbers = new GameObject[temp.Length];
-
+        Transform[] poses = new Transform[numbers.Length];
         switch (numbers.Length)
         {
-            case 4:
-                numberHorizontal.spacing = horizontalSize_4;
-                break;
-            case 3:
-                numberHorizontal.spacing = horizontalSize_3;
+            case 1:
+                poses[0] = pos_1;
                 break;
             case 2:
-                numberHorizontal.spacing = horizontalSize_2;
+                poses[0] = poses_2[0];
+                poses[1] = poses_2[1];
+                break;
+            case 3:
+                poses[0] = poses_3[0];
+                poses[1] = poses_3[1];
+                poses[2] = poses_3[2];
+                break;
+            case 4:
+                poses[0] = poses_4[0];
+                poses[1] = poses_4[1];
+                poses[2] = poses_4[2];
+                poses[3] = poses_4[3];
                 break;
         }
 
@@ -124,8 +134,9 @@ public class CommonBlock : Block
             var num = PoolManager.GetNumber((int)temp[i] - 48);
             num.SetActive(true);
             numbers[i] = num;
-            numbers[i].transform.SetParent(numbersParent);
+            numbers[i].transform.SetParent(poses[i]);
             numbers[i].transform.localScale = Vector3.one;
+            numbers[i].transform.localPosition = Vector3.zero;
         }
     }
 

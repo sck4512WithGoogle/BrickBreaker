@@ -18,8 +18,7 @@ namespace MJ.Ads
         private Action onRewardedFailed;
         private Action onRewardedClosed;
 
-        private Action onBannerLoadFailed;
-
+        
 
         private bool isBannerShow = false; //배너 광고 현재 나왔는지 여부 체크
         private bool isBannerLoaded = false;
@@ -132,8 +131,7 @@ namespace MJ.Ads
             // Create a 320x50 banner at the top of the screen.
             bannerView = new BannerView(adUnitId, AdSize.SmartBanner,AdPosition.Bottom);
             bannerView.OnAdLoaded += (a, b) => isBannerLoaded = true;
-            bannerView.OnAdFailedToLoad += (a, b) => onBannerLoadFailed?.Invoke();
-
+            
             // Create an empty ad request.
             AdRequest request = new AdRequest.Builder().Build();
             // Load the banner with the request.
@@ -142,14 +140,13 @@ namespace MJ.Ads
 
         public void ShowBanner(Action _OnLoadFailed)
         {
-            onBannerLoadFailed = _OnLoadFailed;
             isBannerLoaded = false;
             RequestBanner();
-            CoroutineExecuter.Excute(ShowBannerRoutine());
+            CoroutineExecuter.Excute(ShowBannerRoutine(_OnLoadFailed));
 
-            IEnumerator ShowBannerRoutine()
+            IEnumerator ShowBannerRoutine(Action _OnFailed)
             {
-                float timer = 1.5f;
+                float timer = 3f;
                 while (timer > 0f)
                 {
                     timer -= Time.deltaTime;
@@ -162,7 +159,7 @@ namespace MJ.Ads
 
                     yield return null;
                 }
-                onBannerLoadFailed?.Invoke();
+                _OnFailed?.Invoke();
             }
         }
 

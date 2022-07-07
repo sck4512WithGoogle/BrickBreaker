@@ -28,6 +28,7 @@ public class IntroSceneController : MonoBehaviour
         //리모트 컨피그 데이터 불러옴
         RemoteConfigData.LoadData();
 
+
 #if !UNITY_EDITOR
         Application.targetFrameRate = 60;
 
