@@ -35,6 +35,17 @@ namespace MJ.Ads
             isInit = true;
         }
 
+        public static void LoadOpeningAd()
+        {
+            googleAdmobController.LoadOpeningAds();
+        }
+        public static void ShowOpeningAd()
+        {
+            googleAdmobController.ShowAdIfAvailable();
+        }
+
+
+
         public static void ShowBannerAd()
         {
 #if UNITY_EDITOR

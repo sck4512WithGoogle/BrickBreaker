@@ -22,13 +22,14 @@ public class MagicBlock : Block
     private static IEnumerator ChangeTimePeriodRoutine()
     {
         float max = timePeriod * 2f;
+        var waitForFixedUpdate = new WaitForFixedUpdate();
         while (true)
         {
             currentTime = 0f;
             while (currentTime < max)
             {
-                currentTime += Time.deltaTime;
-                yield return null;
+                currentTime += Time.fixedDeltaTime;                                
+                yield return waitForFixedUpdate;
             }
         }
     }

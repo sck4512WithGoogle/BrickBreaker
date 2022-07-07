@@ -4383,7 +4383,7 @@ MonoBehaviour:
   blockTouchSound: {fileID: 8300000, guid: ffad5e385bfe785489bbf928b7749226, type: 3}
   blockDestroySound: {fileID: 8300000, guid: fa5cafd41f16d954a9696eee8c1dca3e, type: 3}
   magicBlockDestroySound: {fileID: 8300000, guid: 81a350e94d587244d9cacff833904374, type: 3}
-  addBallSound: {fileID: 8300000, guid: 3ad1f0164faf0e941b3f5048c7875a09, type: 3}
+  addBallSound: {fileID: 8300000, guid: 8e1b22b6056a4b34394c5eb94ab24d70, type: 3}
 --- !u!1 &1300922142
 GameObject:
   m_ObjectHideFlags: 0

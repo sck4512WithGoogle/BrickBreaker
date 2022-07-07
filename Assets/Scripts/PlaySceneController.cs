@@ -38,10 +38,9 @@ public class PlaySceneController : MonoBehaviour
     
     private float currentTimeScale;
     private bool isClick = false;
-    private bool hasResurrected = false; //부활 사용했는지
     private Queue<PopupAction> popupActions;
     private bool hasInsertAction = false; //게임매니저에 델리게이트에 넣었는지 여부
-    private bool hasClickedResurrection = false;
+    private bool hasClickedRewardedAds = false;
 
 
     private void Awake()
@@ -167,7 +166,7 @@ public class PlaySceneController : MonoBehaviour
         {
             return;
         }
-        hasClickedResurrection = true;
+        hasClickedRewardedAds = true;
         isClick = true;
         //입력 못 받게
         InputController.escInput.Disable();
@@ -184,7 +183,7 @@ public class PlaySceneController : MonoBehaviour
             messageBoxUI.SetButtonTextOK();
             messageBoxUI.SetMessage("Failed to load ads.");
 
-            hasClickedResurrection = false;
+            hasClickedRewardedAds = false;
         };
         Action onSuccess = () =>
         {
@@ -207,14 +206,14 @@ public class PlaySceneController : MonoBehaviour
             Resurrect();
             //입력 받을 수 있게 해줌
             InputController.escInput.Enable();
-            hasClickedResurrection = false;
+            hasClickedRewardedAds = false;
         }
     }
 
     //게임오버 트리거에 닿았을 때
     public void OnGameOver()
     {
-        if(hasResurrected)
+        if(GameManager.Instance.HasResurrected)
         {
             //부활 했었으면 바로 게임오버로 넘어감
             PlayMapDataManager.DeleteData();
@@ -233,7 +232,6 @@ public class PlaySceneController : MonoBehaviour
     {
         GameManager.Instance.OnResurrect();
         gameOverTriggerCollider.enabled = true;
-        hasResurrected = true;
     }
 
 
@@ -255,7 +253,7 @@ public class PlaySceneController : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         //퍼즈 상태이면서 패널 꺼져있는 경우만, 광고 본 경우도 안 됨
-        if(pause && !pausePanel.activeSelf && !hasClickedResurrection)
+        if(pause && !pausePanel.activeSelf && !hasClickedRewardedAds)
         {
             SetTimeScale(0);
             pausePanel.SetActive(true);
@@ -283,6 +281,7 @@ public class PlaySceneController : MonoBehaviour
         StartCoroutine(AddPopupActionRoutine());
         IEnumerator AddPopupActionRoutine()
         {
+            hasClickedRewardedAds = true;
             //시작할 때 못 누르게 함
             for (int i = 0; i < itemButtonImages.Length; i++)
             {
@@ -310,6 +309,7 @@ public class PlaySceneController : MonoBehaviour
             GameManager.Instance.OnBlockCreateDone -= AddPopupAction;
             InputController.escInput.Enable();
             hasInsertAction = false;
+            hasClickedRewardedAds = false;
         }
     }
 }

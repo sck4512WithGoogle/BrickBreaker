@@ -25,6 +25,7 @@ public sealed  class GameManager : MonoBehaviour
     [SerializeField] private LineRenderer ballShootLineRenderer;
     [SerializeField] private LineRenderer ballShootLineRenderer2;
     [SerializeField] private Ball startBall; //제일 처음 주는 공
+   
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI ballCountText;
@@ -52,6 +53,8 @@ public sealed  class GameManager : MonoBehaviour
     private HashSet<Movable> moves;
 
     private int currentBallCount;
+    public bool HasResurrected => hasResurrected;
+    private bool hasResurrected = false; //부활 사용했는지
 
     private void Awake()
     {     
@@ -81,8 +84,7 @@ public sealed  class GameManager : MonoBehaviour
         ballShootInputListener.OnBeginDragAction += _Position =>
         {
             firstClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
-           
-            
+                       
 
             shootDirectionLength = 0f;
 
@@ -178,6 +180,7 @@ public sealed  class GameManager : MonoBehaviour
             startBall.transform.position = totalBallPos;
             currentBallCount = playData.ballCount;
             round = playData.round;
+            hasResurrected = playData.hasResurrected;
             ScoreManager.AddScore(playData.score);
 
 
@@ -253,6 +256,10 @@ public sealed  class GameManager : MonoBehaviour
             }
         }
         ballShootInputListener.SetInputActive(true);
+        hasResurrected = true;
+
+
+        SaveData();
     }
 
     public void SetTotalBallPos(Vector3 _Pos)
@@ -508,6 +515,7 @@ public sealed  class GameManager : MonoBehaviour
         playMapData.totalBallPos = totalBallPos;
         playMapData.round = round;
         playMapData.score = ScoreManager.CurScore;
+        playMapData.hasResurrected = hasResurrected;
 
         List<CommonBlockData> commonBlocksData = new List<CommonBlockData>();
         foreach (var commonBlock in commonBlocks)

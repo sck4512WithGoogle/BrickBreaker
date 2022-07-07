@@ -29,6 +29,16 @@ public class IntroSceneController : MonoBehaviour
         RemoteConfigData.LoadData();
 
 
+        AdsManager.LoadOpeningAd();
+        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged += _State =>
+        {
+            if (_State == GoogleMobileAds.Common.AppState.Foreground)
+            {
+                AdsManager.ShowOpeningAd();
+            }
+        };
+
+
 #if !UNITY_EDITOR
         Application.targetFrameRate = 60;
 
@@ -36,7 +46,7 @@ public class IntroSceneController : MonoBehaviour
         firebaseAuth.SignInAnonymouslyAsync();
 #endif
     }
-
+     
     private void Start()
     {
         StartCoroutine(IntroRoutine());

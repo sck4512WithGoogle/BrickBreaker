@@ -4,24 +4,21 @@ using TMPro;
 using MJ.Manager;
 using MJ.Data;
 using UnityEngine.InputSystem;
+using System.Collections;
+using MJ.Ads;
 
 public class GameOverSceneController : MonoBehaviour
 {
+    [SerializeField] private GameObject serverLoading;
     [SerializeField] private TextMeshProUGUI curScoreText;
     [SerializeField] private TextMeshProUGUI bestScoreText;
-
+    private bool isClick = false;
+    
     private void Start()
     {
-        //if(Application.systemLanguage == SystemLanguage.Korean)
-        //{
-        //    curScoreText.text = "현재점수 : ";
-        //    bestScoreText.text = "최고기록 : ";
-        //}
-        //else
-        //{
-            curScoreText.text = "SCORE : ";
-            bestScoreText.text = "BEST SCORE : ";
-        //}
+        curScoreText.text = "SCORE : ";
+        bestScoreText.text = "BEST SCORE : ";
+
 
         curScoreText.text += ScoreManager.CurScore.ToString();
         bestScoreText.text += ScoreManager.BestScore.ToString();
@@ -46,12 +43,41 @@ public class GameOverSceneController : MonoBehaviour
 
     public void OnClickHome()
     {
-        SceneManager.LoadScene(SceneNames.MainSceneName);
+        if(isClick)
+        {
+            return;
+        }
+        isClick = true;
+
+        StartCoroutine(ShowAdsAndLoadScene(SceneNames.MainSceneName));
+        IEnumerator ShowAdsAndLoadScene(string _SceneName)
+        {
+            serverLoading.SetActive(true);
+            //약간 기다림
+            yield return YieldContainer.WaitForFixedUpdate;
+
+
+
+            bool isDone = false;
+            AdsManager.ShowInterstitialAd(() => isDone = true, () => isDone = true);
+            yield return new WaitUntil(() => isDone);
+
+            serverLoading.SetActive(false);
+            SceneManager.LoadScene(_SceneName);
+        }
     }
 
     public void OnClickStart()
     {
+        if (isClick)
+        {
+            return;
+        }
+        isClick = true;
+
         DataManager.IsContinuePlay = false;
         SceneManager.LoadScene(SceneNames.PlaySceneName);
     }
+
+
 }

@@ -11,6 +11,7 @@ public class PlayData
     public Vector3 totalBallPos;
     public int round;
     public int score;
+    public bool hasResurrected;
 }
 
 [Serializable]

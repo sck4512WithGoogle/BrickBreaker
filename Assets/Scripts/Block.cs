@@ -6,7 +6,7 @@ public class Block : Movable
 {
     [SerializeField] protected SpriteRenderer spriteRenderer;
 
-    protected static int suicideDefinition = 4;
+    protected static int suicideDefinition = 3;
     protected int currentPosY;
     public int CurrentPosY => currentPosY;
     public bool IsScaleChangeDone { get; private set; }

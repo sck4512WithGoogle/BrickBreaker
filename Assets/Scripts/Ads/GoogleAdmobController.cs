@@ -9,16 +9,22 @@ namespace MJ.Ads
 {
     public class GoogleAdmobController
     {
+        private AppOpenAd appOpeningAd;
         private BannerView bannerView;
         private InterstitialAd interstitialAd;
         private RewardedAd rewardedAd;
+
         private Action onInterstitialFailed;
         private Action onInterstitialClosed;
 
         private Action onRewardedFailed;
         private Action onRewardedClosed;
 
-        
+
+        private DateTime openingAdsLoadedTime;
+        private bool isOpeningAdsShowing = false;
+        private bool isOpeningAdAvailable => appOpeningAd != null && (DateTime.UtcNow - openingAdsLoadedTime).TotalHours < 4;
+
 
         private bool isBannerShow = false; //배너 광고 현재 나왔는지 여부 체크
         private bool isBannerLoaded = false;
@@ -98,6 +104,111 @@ namespace MJ.Ads
                 //RequestBannerAd();
             });
         }
+
+
+        #region 오프닝 광고
+        public void LoadOpeningAds()
+        {
+            string adUnitId = string.Empty;
+            if (AdsManager.IsTestMode)
+            {
+#if UNITY_ANDROID
+                adUnitId = "ca-app-pub-3940256099942544/3419835294";
+#elif UNITY_IOS
+    adUnitId = "ca-app-pub-3940256099942544/5662855259";
+#else
+    adUnitId = "unexpected_platform";
+#endif
+            }
+            else
+            {
+#if UNITY_ANDROID
+                adUnitId = "ca-app-pub-1270408828484515/7600281430";
+#elif UNITY_IPHONE
+        adUnitId = "ca-app-pub-1270408828484515/1669583319";
+#else
+        adUnitId = "unexpected_platform";
+#endif
+            }
+
+            AdRequest adRequest = new AdRequest.Builder().Build();
+
+            // Load an app open ad for portrait orientation
+            AppOpenAd.LoadAd(adUnitId, ScreenOrientation.Portrait, adRequest, ((appOpenAd, error) =>
+            {
+                if (error != null)
+                {
+                    // Handle the error.
+                    Debug.LogFormat("Failed to load the ad. (reason: {0})", error.LoadAdError.GetMessage());
+                    return;
+                }
+
+                // App open ad is loaded.
+                appOpeningAd = appOpenAd;
+                openingAdsLoadedTime = DateTime.UtcNow;
+            }));
+        }
+        public void ShowAdIfAvailable()
+        {
+            if(!isOpeningAdAvailable || isOpeningAdsShowing)
+            {
+                return;
+            }
+
+            appOpeningAd.OnAdDidDismissFullScreenContent += HandleAdDidDismissFullScreenContent;
+            appOpeningAd.OnAdFailedToPresentFullScreenContent += HandleAdFailedToPresentFullScreenContent;
+            appOpeningAd.OnAdDidPresentFullScreenContent += HandleAdDidPresentFullScreenContent;
+            appOpeningAd.OnAdDidRecordImpression += HandleAdDidRecordImpression;
+            appOpeningAd.OnPaidEvent += HandlePaidEvent;
+
+            appOpeningAd.Show();
+        }
+
+        private void HandleAdDidDismissFullScreenContent(object sender, EventArgs args)
+        {
+            Debug.Log("Closed app open ad");
+            // Set the ad to null to indicate that AppOpenAdManager no longer has another ad to show.
+            appOpeningAd = null;
+            isOpeningAdsShowing = false;
+            LoadOpeningAds();
+        }
+
+        private void HandleAdFailedToPresentFullScreenContent(object sender, AdErrorEventArgs args)
+        {
+            Debug.LogFormat("Failed to present the ad (reason: {0})", args.AdError.GetMessage());
+            // Set the ad to null to indicate that AppOpenAdManager no longer has another ad to show.
+            appOpeningAd = null;
+            LoadOpeningAds();
+        }
+
+        private void HandleAdDidPresentFullScreenContent(object sender, EventArgs args)
+        {
+            Debug.Log("Displayed app open ad");
+            isOpeningAdsShowing = true;
+        }
+
+        private void HandleAdDidRecordImpression(object sender, EventArgs args)
+        {
+            Debug.Log("Recorded ad impression");
+        }
+
+        private void HandlePaidEvent(object sender, AdValueEventArgs args)
+        {
+            Debug.LogFormat("Received paid event. (currency: {0}, value: {1}",
+                    args.AdValue.CurrencyCode, args.AdValue.Value);
+        }
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
 
 
 

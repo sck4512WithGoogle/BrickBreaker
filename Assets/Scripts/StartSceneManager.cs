@@ -21,6 +21,7 @@ public class StartSceneManager : MonoBehaviour
     [Header("PopUps")]
     [SerializeField] private GameObject optionPopup;
     [SerializeField] private GameObject tutorialPopup;
+    [SerializeField] private GameObject startMessagePopup;
 
     private void OnEnable()
     {
@@ -59,9 +60,41 @@ public class StartSceneManager : MonoBehaviour
         Application.Quit();
     }
 
+  
+    public void OnClickStartMessageOk()
+    {
+        //입력 못 받게 하려고
+        for (int i = 0; i < mainButtons.Length; i++)
+        {
+            mainButtons[i].image.enabled = false;
+        }
+        startMessagePopup.SetActive(false);
+
+
+        CoroutineExecuter.ExcuteAfterWaitTime(() =>
+        {
+            //이것도 꺼줌
+            logo.SetActive(false);
+            for (int i = 0; i < optionAndTutorialButtons.Length; i++)
+            {
+                optionAndTutorialButtons[i].SetActive(false);
+            }
+
+
+            DataManager.IsContinuePlay = false;
+            StartCoroutine(Fade(true, darkImage, () => SceneManager.LoadScene(SceneNames.PlaySceneName), 2f));
+        }, 0.1f);
+    }
 
     public void OnClickStart()
     {
+        //데이터 갖고있으면 이거 켜줌
+        if(PlayMapDataManager.HasData)
+        {
+            startMessagePopup.SetActive(true);
+            return;
+        }
+
         //입력 못 받게 하려고
         for (int i = 0; i < mainButtons.Length; i++)
         {
@@ -80,6 +113,7 @@ public class StartSceneManager : MonoBehaviour
         DataManager.IsContinuePlay = false;
         StartCoroutine(Fade(true, darkImage, () => SceneManager.LoadScene(SceneNames.PlaySceneName), 2f));
     }
+
 
     public void OnClickContinue()
     {
