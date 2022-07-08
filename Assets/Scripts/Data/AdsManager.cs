@@ -5,7 +5,7 @@ namespace MJ.Ads
 {
     public static class AdsManager
     {
-        private static bool isTestMode = true;
+        private static bool isTestMode = false;
         public static bool IsTestMode => isTestMode;
 
 
@@ -13,6 +13,7 @@ namespace MJ.Ads
         private static UnityAdsController unityAdsController;
 
         private static bool isInit = false;
+        public static bool IsOpeningAdsShow { get; private set; } = false;
 
         public static void Init()
         {
@@ -41,7 +42,7 @@ namespace MJ.Ads
         }
         public static void ShowOpeningAd()
         {
-            googleAdmobController.ShowAdIfAvailable();
+            googleAdmobController.ShowAdIfAvailable(() => IsOpeningAdsShow = true);
         }
 
 

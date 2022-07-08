@@ -57,7 +57,9 @@ public class StartSceneManager : MonoBehaviour
             return;
         }
 
+#if !UNITY_EDITOR
         Application.Quit();
+#endif
     }
 
   

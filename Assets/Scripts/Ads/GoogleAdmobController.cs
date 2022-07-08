@@ -146,22 +146,24 @@ namespace MJ.Ads
                 // App open ad is loaded.
                 appOpeningAd = appOpenAd;
                 openingAdsLoadedTime = DateTime.UtcNow;
+
+
+                appOpeningAd.OnAdDidDismissFullScreenContent += HandleAdDidDismissFullScreenContent;
+                appOpeningAd.OnAdFailedToPresentFullScreenContent += HandleAdFailedToPresentFullScreenContent;
+                appOpeningAd.OnAdDidPresentFullScreenContent += HandleAdDidPresentFullScreenContent;
+                appOpeningAd.OnAdDidRecordImpression += HandleAdDidRecordImpression;
+                appOpeningAd.OnPaidEvent += HandlePaidEvent;
             }));
         }
-        public void ShowAdIfAvailable()
+        public void ShowAdIfAvailable(Action _OnEnd = null)
         {
-            if(!isOpeningAdAvailable || isOpeningAdsShowing)
+            CoroutineExecuter.Excute(ShowOpeningAd());
+            IEnumerator ShowOpeningAd()
             {
-                return;
+                yield return new WaitWhile(() => !isOpeningAdAvailable || isOpeningAdsShowing);
+                appOpeningAd.Show();
+                _OnEnd?.Invoke();
             }
-
-            appOpeningAd.OnAdDidDismissFullScreenContent += HandleAdDidDismissFullScreenContent;
-            appOpeningAd.OnAdFailedToPresentFullScreenContent += HandleAdFailedToPresentFullScreenContent;
-            appOpeningAd.OnAdDidPresentFullScreenContent += HandleAdDidPresentFullScreenContent;
-            appOpeningAd.OnAdDidRecordImpression += HandleAdDidRecordImpression;
-            appOpeningAd.OnPaidEvent += HandlePaidEvent;
-
-            appOpeningAd.Show();
         }
 
         private void HandleAdDidDismissFullScreenContent(object sender, EventArgs args)

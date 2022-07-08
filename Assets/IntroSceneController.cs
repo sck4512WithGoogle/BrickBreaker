@@ -30,13 +30,7 @@ public class IntroSceneController : MonoBehaviour
 
 
         AdsManager.LoadOpeningAd();
-        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged += _State =>
-        {
-            if (_State == GoogleMobileAds.Common.AppState.Foreground)
-            {
-                AdsManager.ShowOpeningAd();
-            }
-        };
+        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
 
 
 #if !UNITY_EDITOR
@@ -59,6 +53,7 @@ public class IntroSceneController : MonoBehaviour
         fadeImage.gameObject.SetActive(true);
 
 
+
         while (fadeImage.color.a > 0f)
         {
             var color = fadeImage.color;
@@ -67,12 +62,34 @@ public class IntroSceneController : MonoBehaviour
             yield return null;
         }
 
-        yield return YieldContainer.GetWaitForSeconds(2f);
+        float waitTime = 0f;
 
+        while (!AdsManager.IsOpeningAdsShow)
+        {
+            waitTime += Time.deltaTime;
+            yield return null;
+        }
 
+        if (waitTime < 2f)
+        {
+            yield return YieldContainer.GetWaitForSeconds(2f - waitTime);
+        }
+        else
+        {
+            //아니면 이만큼 기다림
+            yield return YieldContainer.GetWaitForSeconds(0.5f);
+        }
+        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
         AdsManager.ShowBannerAd();
         //이후 씬이동
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MainSceneName);
     }
 
+    private void OnAppStateChanged(GoogleMobileAds.Common.AppState _AppStatus)
+    {
+        if(_AppStatus == GoogleMobileAds.Common.AppState.Foreground)
+        {
+            AdsManager.ShowOpeningAd();
+        }
+    }
 }

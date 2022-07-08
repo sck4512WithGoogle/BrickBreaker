@@ -3,7 +3,7 @@ using MJ.Data;
 using System;
 using MJ.Manager;
 using UnityEngine.UI;
-
+using System.Collections;
 
 public class CommonBlock : Block
 {
@@ -15,6 +15,7 @@ public class CommonBlock : Block
 
     [Header("SpriteRenderer")]
     [SerializeField] private SpriteRenderer secondBlockSpriteRenderer;
+    [SerializeField] private SpriteRenderer effectSpriteRenderer;
     private static readonly int damageCountMax = 7; //0, 1, 2, 3, 4, 5, 6, 7 Á¾·ù
 
 
@@ -27,12 +28,11 @@ public class CommonBlock : Block
 
     private int disableScore;
     private GameObject[] numbers;
-    //private HorizontalLayoutGroup numberHorizontal;
+    
     protected override void Awake()
     {
         base.Awake();
         numbers = new GameObject[0];
-        //numberHorizontal = numbersParent.GetComponent<HorizontalLayoutGroup>();
     }
 
 
@@ -41,6 +41,9 @@ public class CommonBlock : Block
         var color = secondBlockSpriteRenderer.color;
         color.a = 1;
         secondBlockSpriteRenderer.color = color;
+
+
+        effectSpriteRenderer.color = new Color(1, 1, 1, 0);
     }
 
     public void SetDamageCount(int _DamageCount)
@@ -61,10 +64,10 @@ public class CommonBlock : Block
         UpdateSecondBlockSpriteRenderer();
 
 
-
-
         if (count > 0)
         {
+            StopCoroutine("TakeDamageEffect");
+            StartCoroutine("TakeDamageEffect");
             GameSoundManager.PlayBlockTouchSound(0.6f);
             //ScoreManager.AddScore(1);
             RenderNumber(count);
@@ -74,6 +77,30 @@ public class CommonBlock : Block
             Die();
         }
     }
+
+    IEnumerator TakeDamageEffect()
+    {
+        effectSpriteRenderer.color = new Color(1, 1, 1, 0);
+        float speed = 3f;
+        while (effectSpriteRenderer.color.a < 0.2f)
+        {
+            var color = effectSpriteRenderer.color;
+            color.a += Time.deltaTime * speed;
+            effectSpriteRenderer.color = color;
+            yield return YieldContainer.WaitForFixedUpdate;
+        }
+
+        while (effectSpriteRenderer.color.a > 0f)
+        {
+            var color = effectSpriteRenderer.color;
+            color.a -= Time.deltaTime * speed;
+            effectSpriteRenderer.color = color;
+            yield return YieldContainer.WaitForFixedUpdate;
+        }
+        effectSpriteRenderer.color = new Color(1, 1, 1, 0);
+    }
+
+
     protected override void Die()
     {
         var blockBreakEffect = PoolManager.GetBlockBreakEffect();

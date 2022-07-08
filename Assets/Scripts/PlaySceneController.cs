@@ -35,17 +35,31 @@ public class PlaySceneController : MonoBehaviour
     [SerializeField] private RectTransform itemButtonsParentRect;
     //[SerializeField] private RectTransform[] itemButtonRects;
 
+    [Header("GameOver")]
+    [SerializeField] private Image fade;
+    [SerializeField] private AudioSource gameOverSound;
+
     
     private float currentTimeScale;
     private bool isClick = false;
     private Queue<PopupAction> popupActions;
     private bool hasInsertAction = false; //게임매니저에 델리게이트에 넣었는지 여부
     private bool hasClickedRewardedAds = false;
-
+    private Action<bool> onPause;
 
     private void Awake()
     {
         popupActions = new Queue<PopupAction>();
+
+        onPause += _Pause =>
+        {
+            //퍼즈 상태이면서 패널 꺼져있는 경우만, 광고 본 경우도 안 됨
+            if (_Pause && !pausePanel.activeSelf && !hasClickedRewardedAds)
+            {
+                SetTimeScale(0);
+                pausePanel.SetActive(true);
+            }
+        };
     }
 
     private void OnEnable()
@@ -56,7 +70,7 @@ public class PlaySceneController : MonoBehaviour
 
     private void OnDisable()
     {
-        InputController.escInput.performed += OnESCPerform;
+        InputController.escInput.performed -= OnESCPerform;
         InputController.escInput.Disable();
     }
 
@@ -156,9 +170,34 @@ public class PlaySceneController : MonoBehaviour
         }
         isClick = true;
 
-        StartCoroutine(ShowAdsAndLoadScene(SceneNames.GameOverSceneName));
+        DoGameOverEvent();
     }
 
+    private void DoGameOverEvent()
+    {
+        StartCoroutine(DoGameOver());
+
+        IEnumerator DoGameOver()
+        {
+            onPause = null;
+            InputController.escInput.Disable();
+            fade.gameObject.SetActive(true);
+
+            gameOverSound.Play();
+            fade.color = new Color(0, 0, 0, 0);
+            while (fade.color.a < 0.5f)
+            {
+                var color = fade.color;
+                color.a += Time.deltaTime;
+                fade.color = color;
+                yield return null;
+            }
+            yield return YieldContainer.GetWaitForSeconds(1f);
+
+            PlayMapDataManager.DeleteData();
+            SceneManager.LoadScene(SceneNames.GameOverSceneName);
+        }
+    }
 
     public void OnClickResurrect()
     {
@@ -216,8 +255,7 @@ public class PlaySceneController : MonoBehaviour
         if(GameManager.Instance.HasResurrected)
         {
             //부활 했었으면 바로 게임오버로 넘어감
-            PlayMapDataManager.DeleteData();
-            SceneManager.LoadScene(SceneNames.GameOverSceneName);
+            DoGameOverEvent();
         }
         else
         {
@@ -252,12 +290,7 @@ public class PlaySceneController : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        //퍼즈 상태이면서 패널 꺼져있는 경우만, 광고 본 경우도 안 됨
-        if(pause && !pausePanel.activeSelf && !hasClickedRewardedAds)
-        {
-            SetTimeScale(0);
-            pausePanel.SetActive(true);
-        }
+        onPause?.Invoke(pause);
     }
 
 

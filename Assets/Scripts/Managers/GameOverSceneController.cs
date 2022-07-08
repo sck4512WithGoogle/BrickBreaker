@@ -23,23 +23,7 @@ public class GameOverSceneController : MonoBehaviour
         curScoreText.text += ScoreManager.CurScore.ToString();
         bestScoreText.text += ScoreManager.BestScore.ToString();
     }
-
-    private void OnEnable()
-    {
-        InputController.escInput.performed += OnESCPerform;
-        InputController.escInput.Enable();
-    }
-
-    private void OnDisable()
-    {
-        InputController.escInput.performed -= OnESCPerform;
-        InputController.escInput.Disable();
-    }
-
-    private void OnESCPerform(InputAction.CallbackContext _CallbackContext)
-    {
-        SceneManager.LoadScene(SceneNames.MainSceneName);
-    }
+     
 
     public void OnClickHome()
     {
@@ -50,21 +34,6 @@ public class GameOverSceneController : MonoBehaviour
         isClick = true;
 
         StartCoroutine(ShowAdsAndLoadScene(SceneNames.MainSceneName));
-        IEnumerator ShowAdsAndLoadScene(string _SceneName)
-        {
-            serverLoading.SetActive(true);
-            //약간 기다림
-            yield return YieldContainer.WaitForFixedUpdate;
-
-
-
-            bool isDone = false;
-            AdsManager.ShowInterstitialAd(() => isDone = true, () => isDone = true);
-            yield return new WaitUntil(() => isDone);
-
-            serverLoading.SetActive(false);
-            SceneManager.LoadScene(_SceneName);
-        }
     }
 
     public void OnClickStart()
@@ -76,8 +45,19 @@ public class GameOverSceneController : MonoBehaviour
         isClick = true;
 
         DataManager.IsContinuePlay = false;
-        SceneManager.LoadScene(SceneNames.PlaySceneName);
+        StartCoroutine(ShowAdsAndLoadScene(SceneNames.PlaySceneName));
     }
 
+    IEnumerator ShowAdsAndLoadScene(string _SceneName)
+    {
+        serverLoading.SetActive(true);
+        //약간 기다림
+        yield return YieldContainer.WaitForFixedUpdate;
 
+        bool isDone = false;
+        AdsManager.ShowInterstitialAd(() => isDone = true, () => isDone = true);
+        yield return new WaitUntil(() => isDone);
+        serverLoading.SetActive(false);
+        SceneManager.LoadScene(_SceneName);
+    }
 }

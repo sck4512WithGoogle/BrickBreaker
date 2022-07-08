@@ -88,7 +88,7 @@ namespace MJ
             }
             else if(_Round < Constants.MaxRound)
             {
-                if (randomValue < 30f)
+                if (randomValue < 25f)
                 {
                     count = 2;
                 }
@@ -108,15 +108,15 @@ namespace MJ
             else
             {
                 //맥스 라운드 초과일 경우
-                if (randomValue < 10f)
+                if (randomValue < 8f)
                 {
                     count = 2;
                 }
-                else if (randomValue < 45f)
+                else if (randomValue < 43f)
                 {
                     count = 3;
                 }
-                else if (randomValue < 84f)
+                else if (randomValue < 83f)
                 {
                     count = 4;
                 }
