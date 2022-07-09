@@ -17,17 +17,19 @@ public class PlayData
 [Serializable]
 public class CommonBlockData
 {
-    public CommonBlockData(Vector3 _Position, int _PosY, int _Count, int _DamageCount)
+    public CommonBlockData(Vector3 _Position, int _PosY, int _Count, int _DamageCount, int _AddScore)
     {
         position = _Position;
         posY = _PosY;
         leftCount = _Count;
         damageCount = _DamageCount;
+        addScore = _AddScore;
     }
     public Vector3 position;
     public int posY;
     public int leftCount;
     public int damageCount;
+    public int addScore;
 }
 
 

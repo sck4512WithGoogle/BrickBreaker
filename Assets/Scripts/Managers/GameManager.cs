@@ -192,6 +192,7 @@ public sealed  class GameManager : MonoBehaviour
                 commonBlock.SetNumber(commonBlockData[i].leftCount);
                 commonBlock.transform.position = commonBlockData[i].position + Vector3.up * Constants.BlockColumnSize;
                 commonBlock.SetDamageCount(commonBlockData[i].damageCount);
+                commonBlock.SetAddScore(commonBlockData[i].addScore);
 
                 commonBlocks.Add(commonBlock);
                 moves.Add(commonBlock);
@@ -526,7 +527,8 @@ public sealed  class GameManager : MonoBehaviour
                 var posY = commonBlock.CurrentPosY;
                 var count = commonBlock.Count;
                 var hasTakeDamaged = commonBlock.CurrentDamageCount;
-                commonBlocksData.Add(new CommonBlockData(pos, posY, count, hasTakeDamaged));
+                var addScore = commonBlock.AddScore;
+                commonBlocksData.Add(new CommonBlockData(pos, posY, count, hasTakeDamaged, addScore));
             }
         }
      

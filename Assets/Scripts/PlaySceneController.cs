@@ -183,7 +183,11 @@ public class PlaySceneController : MonoBehaviour
             InputController.escInput.Disable();
             fade.gameObject.SetActive(true);
 
-            gameOverSound.Play();
+            if (OptionManager.IsSound)
+            {
+                gameOverSound.Play();
+            }
+            
             fade.color = new Color(0, 0, 0, 0);
             while (fade.color.a < 0.5f)
             {

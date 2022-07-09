@@ -26,7 +26,8 @@ public class CommonBlock : Block
     public int CurrentDamageCount => currentDamageCount;
     private int currentDamageCount; //현재 데미지 받은 횟수
 
-    private int disableScore;
+    public int AddScore => addScore;
+    private int addScore;
     private GameObject[] numbers;
     
     protected override void Awake()
@@ -118,7 +119,7 @@ public class CommonBlock : Block
         GameSoundManager.PlayBlockDestroySound(0.6f);
 
 
-        ScoreManager.AddScore(disableScore);
+        ScoreManager.AddScore(addScore);
         gameObject.SetActive(false);
     }
 
@@ -167,6 +168,11 @@ public class CommonBlock : Block
         }
     }
 
+    public void SetAddScore(int _Score)
+    {
+        addScore = _Score;
+    }
+
     public void SetNumber(int _Number)
     {
         count = _Number;
@@ -184,25 +190,25 @@ public class CommonBlock : Block
         }
 
 
-        disableScore = 1;
+        addScore = 1;
         if(20 < count)
         {
-            disableScore++;
+            addScore++;
         }
 
         if (80 < count)
         {
-            disableScore++;
+            addScore++;
         }
 
         if (200 < count)
         {
-            disableScore++;
+            addScore++;
         }
 
         if (300 < count)
         {
-            disableScore++;
+            addScore++;
         }
     }
 

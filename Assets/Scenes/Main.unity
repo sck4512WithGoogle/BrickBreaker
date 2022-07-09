@@ -7562,7 +7562,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: It means that a count of all balls which you have.
+  m_text: It means a count of all balls which you have.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7176ff47168a8d3418a02835457487ce, type: 2}
   m_sharedMaterial: {fileID: -7055236572274829496, guid: 7176ff47168a8d3418a02835457487ce, type: 2}

@@ -175,6 +175,10 @@ namespace MJ.Ads
         {
             onInterstitialAdClosed?.Invoke();
             onRewardedAdClosed?.Invoke();
+
+
+            onInterstitialAdClosed = null;
+            onRewardedAdClosed = null;
         }
     }
 }
