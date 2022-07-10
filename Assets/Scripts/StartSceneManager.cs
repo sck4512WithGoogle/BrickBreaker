@@ -72,6 +72,7 @@ public class StartSceneManager : MonoBehaviour
         }
         startMessagePopup.SetActive(false);
 
+        PlayMapDataManager.DeleteData();
 
         CoroutineExecuter.ExcuteAfterWaitTime(() =>
         {

@@ -21,6 +21,10 @@ namespace MJ.Manager
             curScore = 0;
         }
 
+        public static void SaveBestScore()
+        {
+            PlayerPrefs.SetInt(bestScoreSaveKey, bestScore);
+        }
 
         public static void AddScore(int _Add)
         {
@@ -29,7 +33,6 @@ namespace MJ.Manager
             if (bestScore < curScore)
             {
                 bestScore = curScore;
-                PlayerPrefs.SetInt(bestScoreSaveKey, bestScore);
                 OnBestScoreChange.Invoke(bestScore);
             }
         }

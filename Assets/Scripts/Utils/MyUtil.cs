@@ -30,11 +30,11 @@ namespace MJ
             }
             else if (_Round <= 20)
             {
-                if (randomValue < 40f)
+                if (randomValue < 30f)
                 {
                     count = 1;
                 }
-                else if(randomValue < 70f)
+                else if(randomValue < 60f)
                 {
                     count = 2;
                 }
@@ -66,15 +66,11 @@ namespace MJ
             }
             else if(_Round <= 100)
             {
-                if(randomValue < 40f)
-                {
-                    count = 2;
-                }
-                else if(randomValue < 70f)
+                if(randomValue < 35f)
                 {
                     count = 3;
                 }
-                else if(randomValue < 90f)
+                else if(randomValue < 80f)
                 {
                     count = 4;
                 }
@@ -88,35 +84,18 @@ namespace MJ
             }
             else if(_Round < Constants.MaxRound)
             {
-                if (randomValue < 25f)
+                if(_Round % 5 == 0)
                 {
-                    count = 2;
-                }
-                else if (randomValue < 63f)
-                {
-                    count = 3;
-                }
-                else if (randomValue < 88f)
-                {
-                    count = 4;
+                    count = randomValue < 50f ? 4 : 5;
                 }
                 else
                 {
-                    count = 5;
+                    count = randomValue < 40f ? 3 : 4;
                 }
             }
             else
             {
-                //맥스 라운드 초과일 경우
-                if (randomValue < 8f)
-                {
-                    count = 2;
-                }
-                else if (randomValue < 43f)
-                {
-                    count = 3;
-                }
-                else if (randomValue < 83f)
+                if (randomValue < 45f)
                 {
                     count = 4;
                 }

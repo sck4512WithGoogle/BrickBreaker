@@ -10,7 +10,7 @@ namespace MJ.Data
     }
     public static class DataManager
     {
-        private static StoreType storeType = StoreType.GalaxyStore;
+        private static StoreType storeType = StoreType.GooglePlayStore;
         public static StoreType CurrentStoreType => storeType;
      
 

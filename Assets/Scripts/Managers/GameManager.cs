@@ -84,7 +84,7 @@ public sealed  class GameManager : MonoBehaviour
         ballShootInputListener.OnBeginDragAction += _Position =>
         {
             firstClickPos = Camera.main.ScreenToWorldPoint(_Position) + Vector3.forward * 10f;
-                       
+            totalBallPos = startBall.transform.position;
 
             shootDirectionLength = 0f;
 
@@ -476,12 +476,6 @@ public sealed  class GameManager : MonoBehaviour
         }
         balls.Clear();
 
-        //혹시나 캐싱 안 된 경우 이걸로 해줌
-        if (totalBallPos == Vector3.zero)
-        {
-            totalBallPos = startBall.transform.position;
-        }
-
 
         //다 끝나고 여기 부분
         CreateBlocks();
@@ -511,6 +505,12 @@ public sealed  class GameManager : MonoBehaviour
 
     private void SaveData()
     {
+        //최고 기록 저장
+        ScoreManager.SaveBestScore();
+
+
+
+
         PlayData playMapData = new PlayData();
         playMapData.ballCount = currentBallCount;
         playMapData.totalBallPos = totalBallPos;
