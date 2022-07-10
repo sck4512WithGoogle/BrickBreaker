@@ -178,8 +178,9 @@ public sealed  class GameManager : MonoBehaviour
             var playData = PlayMapDataManager.GetData();
             totalBallPos = playData.totalBallPos;
             startBall.transform.position = totalBallPos;
-            currentBallCount = playData.ballCount;
             round = playData.round;
+
+            currentBallCount = round + 1 - playData.iceBlockData.Length;
             hasResurrected = playData.hasResurrected;
             ScoreManager.AddScore(playData.score);
 
@@ -512,7 +513,6 @@ public sealed  class GameManager : MonoBehaviour
 
 
         PlayData playMapData = new PlayData();
-        playMapData.ballCount = currentBallCount;
         playMapData.totalBallPos = totalBallPos;
         playMapData.round = round;
         playMapData.score = ScoreManager.CurScore;

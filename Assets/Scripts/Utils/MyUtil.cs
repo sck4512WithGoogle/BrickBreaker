@@ -66,27 +66,15 @@ namespace MJ
             }
             else if(_Round <= 100)
             {
-                if(randomValue < 35f)
-                {
-                    count = 3;
-                }
-                else if(randomValue < 80f)
-                {
-                    count = 4;
-                }
-                else
-                {
-                    count = 5;
-                }
-
+                count = randomValue < 55f ? 3 : 4;
 
                 //count = randBlock < 8 ? 2 : randBlock < 16 ? 3 : (randBlock < 20 ? 4 : 5);
             }
             else if(_Round < Constants.MaxRound)
             {
-                if(_Round % 5 == 0)
+                if(_Round % 10 == 0)
                 {
-                    count = randomValue < 50f ? 4 : 5;
+                    count = randomValue < 60f ? 4 : 5;
                 }
                 else
                 {

@@ -7,7 +7,6 @@ public class PlayData
 {
     public CommonBlockData[] commonBlockData;
     public IceBlockData[] iceBlockData;
-    public int ballCount;
     public Vector3 totalBallPos;
     public int round;
     public int score;
