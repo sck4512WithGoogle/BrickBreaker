@@ -87,7 +87,7 @@ public class MagicBlock : Block
             GameManager.Instance.AddBall();
         });
 
-
+        ScoreManager.AddScore(1);
         gameObject.SetActive(false);
     }
 
