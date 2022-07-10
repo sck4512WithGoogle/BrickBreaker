@@ -36,7 +36,7 @@ public sealed  class GameManager : MonoBehaviour
 
     public static GameManager Instance => instance;
     private static GameManager instance;
-    private const float circleRaycaseRadius = 1.35f;  
+    private const float circleRaycaseRadius = 1.36f;  
 
     private int round;
     private Vector3 firstClickPos;
@@ -181,6 +181,11 @@ public sealed  class GameManager : MonoBehaviour
             round = playData.round;
 
             currentBallCount = round + 1 - playData.iceBlockData.Length;
+            if(currentBallCount > Constants.MaxRound)
+            {
+                currentBallCount = Constants.MaxRound;
+            }
+
             hasResurrected = playData.hasResurrected;
             ScoreManager.AddScore(playData.score);
 
@@ -401,7 +406,7 @@ public sealed  class GameManager : MonoBehaviour
         }
 
         int shootBallCount;
-        if(OptionManager.IsPowerUpItemOptionOn)
+        if (OptionManager.IsPowerUpItemOptionOn)
         {
             var ballCountAndDamage = GetBallCountAndDamage(currentBallCount);
             DataManager.BallDamage = ballCountAndDamage.Damage;
@@ -486,7 +491,7 @@ public sealed  class GameManager : MonoBehaviour
     private BallCountAndDamage GetBallCountAndDamage(int _CurBallCount)
     {
         var result = new BallCountAndDamage();
-        int maxBallCount = 20;
+        const int maxBallCount = 25;
 
         if (_CurBallCount == 1)
         {
