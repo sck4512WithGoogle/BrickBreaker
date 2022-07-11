@@ -161,9 +161,14 @@ namespace MJ.Ads
             IEnumerator ShowOpeningAd()
             {
                 float waitTime = 0f;
-                while ((!isOpeningAdAvailable || isOpeningAdsShowing) && waitTime < 4f)
+                while (!isOpeningAdAvailable || isOpeningAdsShowing)
                 {
                     waitTime += Time.deltaTime;
+                    if(waitTime > 4f)
+                    {
+                        _OnEnd?.Invoke();
+                        yield break;
+                    }
                     yield return null;
                 }
                 //yield return new WaitWhile(() => !isOpeningAdAvailable || isOpeningAdsShowing);
