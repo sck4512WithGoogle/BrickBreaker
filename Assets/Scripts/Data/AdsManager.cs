@@ -5,7 +5,7 @@ namespace MJ.Ads
 {
     public static class AdsManager
     {
-        private static bool isTestMode = false;
+        private static bool isTestMode = true;
         public static bool IsTestMode => isTestMode;
 
 

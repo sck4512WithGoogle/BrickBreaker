@@ -160,7 +160,13 @@ namespace MJ.Ads
             CoroutineExecuter.Excute(ShowOpeningAd());
             IEnumerator ShowOpeningAd()
             {
-                yield return new WaitWhile(() => !isOpeningAdAvailable || isOpeningAdsShowing);
+                float waitTime = 0f;
+                while ((!isOpeningAdAvailable || isOpeningAdsShowing) && waitTime < 4f)
+                {
+                    waitTime += Time.deltaTime;
+                    yield return null;
+                }
+                //yield return new WaitWhile(() => !isOpeningAdAvailable || isOpeningAdsShowing);
                 appOpeningAd.Show();
                 _OnEnd?.Invoke();
             }

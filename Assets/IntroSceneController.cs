@@ -63,7 +63,7 @@ public class IntroSceneController : MonoBehaviour
         }
 
         float waitTime = 0f;
-
+      
         while (!AdsManager.IsOpeningAdsShow)
         {
             waitTime += Time.deltaTime;
@@ -79,6 +79,7 @@ public class IntroSceneController : MonoBehaviour
             //아니면 이만큼 기다림
             yield return YieldContainer.GetWaitForSeconds(0.5f);
         }
+
         GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
         AdsManager.ShowBannerAd();
         //이후 씬이동
