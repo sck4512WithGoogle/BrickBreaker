@@ -69,6 +69,7 @@ public class IntroSceneController : MonoBehaviour
             waitTime += Time.deltaTime;
             yield return null;
         }
+        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
 
         if (waitTime < 2f)
         {
@@ -80,7 +81,6 @@ public class IntroSceneController : MonoBehaviour
             yield return YieldContainer.GetWaitForSeconds(0.5f);
         }
 
-        GoogleMobileAds.Api.AppStateEventNotifier.AppStateChanged -= OnAppStateChanged;
         AdsManager.ShowBannerAd();
         //ÀÌÈÄ ¾ÀÀÌµ¿
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MainSceneName);

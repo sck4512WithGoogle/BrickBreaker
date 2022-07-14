@@ -12,20 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: 
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e8aa61cd-addc-4a41-839d-67c45e622d7e\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"296b30c9-4ec8-4e62-8d51-18c970642405\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"StoreReviewSiteData\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"keys\":
     [\r\n          \"GooglePlayStore\",\r\n          \"GalaxyStore\",\r\n         
     \"OneStore\",\r\n          \"AppStore\"\r\n        ],\r\n        \"values\":
-    [\r\n          \"http://stbong.com/\",\r\n          \"http://stbong.com/\",\r\n         
+    [\r\n          \"https://play.google.com/store/apps/details?id=com.studio_bong.brickbreaker\",\r\n         
+    \"https://play.google.com/store/apps/details?id=com.studio_bong.brickbreaker\",\r\n         
     \"http://stbong.com/\",\r\n          \"http://stbong.com/\"\r\n        ]\r\n     
     }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"e8aa61cd-addc-4a41-839d-67c45e622d7e\"\r\n   
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"296b30c9-4ec8-4e62-8d51-18c970642405\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"StoreReviewSiteData\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"keys\":
     [\r\n          \"GooglePlayStore\",\r\n          \"GalaxyStore\",\r\n         
     \"OneStore\",\r\n          \"AppStore\"\r\n        ],\r\n        \"values\":
-    [\r\n          \"http://stbong.com/\",\r\n          \"http://stbong.com/\",\r\n         
+    [\r\n          \"https://play.google.com/store/apps/details?id=com.studio_bong.brickbreaker\",\r\n         
+    \"https://play.google.com/store/apps/details?id=com.studio_bong.brickbreaker\",\r\n         
     \"http://stbong.com/\",\r\n          \"http://stbong.com/\"\r\n        ]\r\n     
     }\r\n    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"7f1b7f5d-9854-49c5-8df8-9fbb51b6306c\",\r\n   

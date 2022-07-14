@@ -124,7 +124,7 @@ namespace MJ.Ads
             {
 #if UNITY_ANDROID
                 adUnitId = "ca-app-pub-1270408828484515/7600281430";
-#elif UNITY_IPHONE
+#elif UNITY_IOS
         adUnitId = "ca-app-pub-1270408828484515/1669583319";
 #else
         adUnitId = "unexpected_platform";
@@ -244,8 +244,8 @@ namespace MJ.Ads
             {
 #if UNITY_ANDROID
                 adUnitId = "ca-app-pub-1270408828484515/2036614515";
-#elif UNITY_IPHONE
-        adUnitId = "ca-app-pub-3940256099942544/2934735716";
+#elif UNITY_IOS
+        adUnitId = "ca-app-pub-1270408828484515/8424831411";
 #else
         adUnitId = "unexpected_platform";
 #endif
@@ -299,7 +299,7 @@ namespace MJ.Ads
                 adUnitId = "unused";
 #elif UNITY_ANDROID
         adUnitId = "ca-app-pub-3940256099942544/1033173712";
-#elif UNITY_IPHONE || UNITY_iOS
+#elif UNITY_IOS
         adUnitId = "ca-app-pub-3940256099942544/4411468910";
 #else
         adUnitId = "unexpected_platform";
@@ -311,7 +311,7 @@ namespace MJ.Ads
                 adUnitId = "unused";
 #elif UNITY_ANDROID
         adUnitId = "ca-app-pub-1270408828484515/8410451177";
-#elif UNITY_IPHONE || UNITY_iOS
+#elif UNITY_IOS
         adUnitId = "ca-app-pub-1270408828484515/9003459104";
 #else
         adUnitId = "unexpected_platform";
@@ -389,7 +389,7 @@ namespace MJ.Ads
                 adUnitId = "unused";
 #elif UNITY_ANDROID
                 adUnitId = "ca-app-pub-3940256099942544/5224354917";
-#elif UNITY_IPHONE
+#elif UNITY_IOS
                 adUnitId = "ca-app-pub-3940256099942544/1712485313";
 #else
                 adUnitId = "unexpected_platform";
@@ -401,7 +401,7 @@ namespace MJ.Ads
                 adUnitId = "unused";
 #elif UNITY_ANDROID
                 adUnitId = GetRewardAdsID();
-#elif UNITY_IPHONE
+#elif UNITY_IOS
                 adUnitId = GetRewardAdsID();
 #else
                 adUnitId = "unexpected_platform";
